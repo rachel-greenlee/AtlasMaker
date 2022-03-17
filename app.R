@@ -12,6 +12,9 @@ library(RColorBrewer)
 # Load data bundle saved from data-input script
 load("final_data.rdata")
 
+# Functions
+pal3_all <- colorNumeric(c("RdYlGn"), theme1_min_val:theme1_max_val)
+pal3_birds <- colorNumeric(c("RdYlGn"), theme2_min_val:theme2_max_val)
 
 
 # Define Module Map UI -----
@@ -41,9 +44,9 @@ map_server <- function(id, df, pts1, pts2){
         
         addPolygons(weight = 1,
                     opacity = 1.0,
-                    #color = ~pal3(df@data$Abundance),
-                    label = ~paste(df@data$NAME, "</br>",
-                                   "Number of Species:", signif(df@data$Abundance, digits = 6)),
+                    color = ~pal3_birds(df@data$Abundance),
+                      # colorNumeric(c("RdYlGn"), min(df@data$Abundance):max(df@data$Abundance))
+                    label = ~paste(df@data$NAME, signif(df@data$Abundance, digits = 6)),
                     highlight = highlightOptions(weight = 1,
                                                  color = "black",
                                                  bringToFront = TRUE)) %>%
@@ -91,8 +94,14 @@ ui <- dashboardPage(skin = "purple",
                                 map_UI("theme2_map")),
                         
                         tabItem(tabName = "about",
-                                        ###why isn't this working?! :( 
-                                        #shiny::includeMarkdown('about.md')
+                                  h3(strong("About")), 
+                                     h5("This is a module designed with 
+                                        diversity in mind; species diversity
+                                        that is. Through the tabs on the left 
+                                        you can navigate through different species
+                                        abundances to see how many unique species appear 
+                                        in each county within the U.S. state of New York."), 
+                                     h5(em("Data comes from the State of New York"))
                                 )
                                 
                         )

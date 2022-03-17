@@ -15,7 +15,6 @@ counties_NY <- tigris::counties() %>%
 
 
 
-
 # Save base polygons data----
 
 #### saving all files created above in an .rdata file, add as we go
