@@ -9,6 +9,9 @@ counties_NY <- tigris::counties() %>%
   dplyr::select(STATEFP, NAME, INTPTLAT, INTPTLON, ALAND, AWATER, geometry)
 
 
+tracts_MN <- tracts("MN")
+
+
 
 
 
@@ -18,5 +21,5 @@ counties_NY <- tigris::counties() %>%
 # Save base polygons data----
 
 #### saving all files created above in an .rdata file, add as we go
-save(counties_NY,
+save(counties_NY, tracts_MN,
      file = "supported_polygons.rdata")
