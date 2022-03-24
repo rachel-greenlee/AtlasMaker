@@ -12,7 +12,7 @@ require(RSocrata)
 # See Git Notes on Homepage: https://github.com/jbryer/NYCFutureMap
 # Alternative from DOHM https://data.ct.gov/resource/bfnu-rgqt.json
 MODZCTA <- read.socrata(
-  "https://data.cityofnewyork.us/resource/pri4-ifjk.json", 
+  "https://data.cityofnewyork.us/resource/pri4-ifjk.json?$select=MODZCTA,the_geom,pop_est", 
   app_token = Sys.getenv("APP_TOKEN"),
   email     = Sys.getenv("PHDS_EMAIL"),
   password  = Sys.getenv("PHDS_PASSWORD")
