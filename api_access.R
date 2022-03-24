@@ -20,7 +20,7 @@ MODZCTA <- read.socrata(
 # NYC Open Data on Motor Vehicle Colisions
 # https://data.cityofnewyork.us/Public-Safety/Motor-Vehicle-Collisions-Crashes/h9gi-nx95
 MVColisions <- read.socrata(
-  "https://data.cityofnewyork.us/resource/h9gi-nx95.json", 
+  "https://data.cityofnewyork.us/resource/h9gi-nx95.json?$limit=10000", 
   app_token = Sys.getenv("APP_TOKEN"),
   email     = Sys.getenv("PHDS_EMAIL"),
   password  = Sys.getenv("PHDS_PASSWORD")
@@ -29,7 +29,7 @@ MVColisions <- read.socrata(
 # NYPD Complaint Data Historic
 # https://data.cityofnewyork.us/Public-Safety/NYPD-Complaint-Data-Historic/qgea-i56i
 Complaints <- read.socrata(
-  "https://data.cityofnewyork.us/resource/qgea-i56i.json", 
+  "https://data.cityofnewyork.us/resource/qgea-i56i.json?$limit=10000", 
   app_token = Sys.getenv("APP_TOKEN"),
   email     = Sys.getenv("PHDS_EMAIL"),
   password  = Sys.getenv("PHDS_PASSWORD")
@@ -46,3 +46,5 @@ Deaths <- read.socrata(
 
 # A potential addition should any of these not work
 # https://data.cityofnewyork.us/Transportation/TLC-Approved-LabCorp-Patient-Services-Drug-Test-Lo/hiik-hmf3
+
+# exported as csv's using write.csv() for Complaints, MODZCTA, MVColisions 
