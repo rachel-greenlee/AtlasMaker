@@ -10,8 +10,9 @@ require(RSocrata)
 # https://data.cityofnewyork.us/Health/Modified-Zip-Code-Tabulation-Areas-MODZCTA-/pri4-ifjk
 # Also sounds like Jason would really like to see this data displayed somehow 
 # See Git Notes on Homepage: https://github.com/jbryer/NYCFutureMap
+# Alternative from DOHM https://data.ct.gov/resource/bfnu-rgqt.json
 MODZCTA <- read.socrata(
-  "https://data.ct.gov/resource/bfnu-rgqt.json", 
+  "https://data.cityofnewyork.us/resource/pri4-ifjk.json", 
   app_token = Sys.getenv("APP_TOKEN"),
   email     = Sys.getenv("PHDS_EMAIL"),
   password  = Sys.getenv("PHDS_PASSWORD")
