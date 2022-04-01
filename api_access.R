@@ -45,6 +45,15 @@ Deaths <- read.socrata(
   password  = Sys.getenv("PHDS_PASSWORD")
 )
 
+# Bus Routes 
+# https://data.cityofnewyork.us/Transportation/Bus-Lanes-Local-Streets/ycrg-ses3
+Routes <- read.socrata(
+  "https://data.cityofnewyork.us/resource/ycrg-ses3.json", 
+  app_token = Sys.getenv("APP_TOKEN"),
+  email     = Sys.getenv("PHDS_EMAIL"),
+  password  = Sys.getenv("PHDS_PASSWORD")
+)
+
 # A potential addition should any of these not work
 # https://data.cityofnewyork.us/Transportation/TLC-Approved-LabCorp-Patient-Services-Drug-Test-Lo/hiik-hmf3
 
