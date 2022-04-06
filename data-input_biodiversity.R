@@ -142,21 +142,23 @@ load("supported_polygons.rdata")
 base_polygons <- counties_NY
 
 
-
+# Make Spatial DataFrames with base_polygons
+# For flowering plants
 flowering_plants <- base_polygons %>%
   left_join(flowering_plants, by = 'NAME')
 flowering_plants <- as_Spatial(flowering_plants)
 
-
+# For birds
 birds <- base_polygons %>%
   left_join(birds, by = 'NAME')
 birds <- as_Spatial(birds)
 
-
+# For amphibians
 amphibians <- base_polygons %>%
   left_join(amphibians, by = 'NAME')
 amphibians <- as_Spatial(amphibians)
 
+# For reptiles
 reptiles <- base_polygons %>%
   left_join(reptiles, by = 'NAME')
 reptiles <- as_Spatial(reptiles)
@@ -265,8 +267,16 @@ datalist <- list(
     points = list(points_campgrounds, points_parks)
   ))
 
-
-
+datalist2 <- tibble(
+  tab1 = list(
+    title = "Flowering Plants",
+    ShapeData = flowering_plants
+  ), 
+  tab2 = list(
+    title = "Birds", 
+    ShapeData = birds
+  )
+)
 
 save(map_base_theme, center_lat, center_long, min_zoom,
      datalist, theme1_pal,

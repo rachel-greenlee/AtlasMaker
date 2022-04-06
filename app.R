@@ -15,9 +15,28 @@ load("final_data.rdata")
 
 map_UI <- function(id) {
   ns <- NS(id)
-  leafletOutput(ns("mymap"), height =700)
+  leafletOutput(ns("mymap"), height = 700)
 }
 
+# ----- >Delete me later< ----- #
+# Getting reacquainted with our data
+datalist$tab1$title # Add to label for title check box in module/theme
+datalist$tab1$fills@data$INTPTLON # Calls longitude points
+datalist$tab2$fills@data$INTPTLAT # Same format as tab 1
+datalist$tab3$fills@data # Spatial Data frame with two identical datasets
+datalist$tab3$fills[[1]]@data$INTPTLON # Required to all with duplicate list
+datalist$tab1$fills@data$Taxonomic.Group # Show grouping for each point - should be applicable to polys too
+datalist$tab1$points[[1]]$label # Labels for each point (but only the points) stored in all tabs (254 total)
+datalist$tab2$points[[1]]$label # Including tab 2 with differing locations and labels (76 total)
+datalist$tab3$points[[1]]$label # Including tab 3 with differing locations and labels (116 total)
+datalist$tab1$fills[[2]] # Counties of New York State
+datalist$tab1$fills[[1]] # State code
+datalist$tab1$fills[[4]] # 3 and 4 call lat and long 
+datalist[[1]]$points # tibble with label, long, lat in 2 parts [[1]] & [[2]]
+# Do all tabs follow the same conventions for loop? No - Tab1, Tab2 have most matches, Tab3 has two identifcal SFs
+# Can tabs be called in the same indexing format? No - there is variation in the placement of data in tab lists
+# Can data be listed in tibble?
+# ----- >Delete Me Later< ----- # 
 
 # Define Module Map Server -----
 
@@ -39,9 +58,21 @@ map_server <- function(id, fills, points, pal){
         # for (fill in fills){
         #   addPolygons(data = fill)
         # }
-  
+
+        # addCircleMarkers(lng = datalist$tab1$fills@data$INTPTLON, 
+        #               lat = datalist$tab1$fills@data$INTPTLAT, 
+        #               popup = datalist$tab1$fills@data$fill_value,
+        #                color = "purple", radius = 2)
+      
+        addPolygons(weight = 1,
+                  fillOpacity = 0.7,
+                  color = ~theme1_pal(fills),
+                  label = ~paste("Label"),
+                  highlight = highlightOptions(weight = 1, color = "black", bringToFront = TRUE))
         
-        
+        addMarkers(lng = points,
+                   lat = points)
+      
         #it can't find the polygon data with this method
         ## error: Don't know how to get path data from object of class list
         # addPolygons(
@@ -151,9 +182,10 @@ ui <- dashboardPage(skin = "purple",
 server <- function(input, output) {
   
   # Theme 1 Tab --------------------------------------------------------------
-  map_server("Flowering Plants", fills = datalist[[3]]$fills, points = datalist[[1]]$points, pal = theme1_pal) 
-  
-  
+  map_server("Flowering Plants", 
+             fills = datalist$tab1$fills@polygons, # Closer, sometimes displays the polygons
+             points = datalist$tab2$points[[1]]$label, # Left alone, not yet functioning
+             pal = theme1_pal) 
   
   }
   
