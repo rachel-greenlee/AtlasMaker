@@ -1,215 +1,288 @@
-
-# Libraries & data ----
-library(shiny)
-library(shinydashboard)
+# Packages-----
 library(leaflet)
-library(tidyverse)
-library(RColorBrewer)
+library(leaflet.extras)
+library(dplyr)
+library(shiny)
+library(readr)
+library(sf)
 
 
-# Load data bundle saved from data-input script
-load("final_data.rdata")
+
+#running the script that represents our eventual package
+source('our_responsibility.R') # eventually this would library(something)
 
 
-# Define Module Map UI -----
+# 1. Pre-processing data into dataframes------
 
-map_UI <- function(id) {
-  ns <- NS(id)
-  leafletOutput(ns("mymap"), height = 700)
-}
+## Points ----
 
-# ----- >Delete me later< ----- #
-# Getting reacquainted with our data
-datalist$tab1$title # Add to label for title check box in module/theme
-datalist$tab1$fills@data$INTPTLON # Calls longitude points
-datalist$tab2$fills@data$INTPTLAT # Same format as tab 1
-datalist$tab3$fills@data # Spatial Data frame with two identical datasets
-datalist$tab3$fills[[1]]@data$INTPTLON # Required to all with duplicate list
-datalist$tab1$fills@data$Taxonomic.Group # Show grouping for each point - should be applicable to polys too
-datalist$tab1$points[[1]]$label # Labels for each point (but only the points) stored in all tabs (254 total)
-datalist$tab2$points[[1]]$label # Including tab 2 with differing locations and labels (76 total)
-datalist$tab3$points[[1]]$label # Including tab 3 with differing locations and labels (116 total)
-datalist$tab1$fills[[2]] # Counties of New York State
-datalist$tab1$fills[[1]] # State code
-datalist$tab1$fills[[4]] # 3 and 4 call lat and long 
-datalist[[1]]$points # tibble with label, long, lat in 2 parts [[1]] & [[2]]
-# Do all tabs follow the same conventions for loop? No - Tab1, Tab2 have most matches, Tab3 has two identifcal SFs
-# Can tabs be called in the same indexing format? No - there is variation in the placement of data in tab lists
-# Can data be listed in tibble?
-# ----- >Delete Me Later< ----- # 
+points_parks <- read_csv("raw-data/State_Park_Facility_Points.csv")
+#add lat/lon to a tibble for inputting to addMarkers() later
+points_parks <- tibble(
+  label = points_parks$Name,
+  long = points_parks$Longitude,
+  lat = points_parks$Latitude)
 
-# Define Module Map Server -----
+points_campgrounds <- read_csv("raw-data/Campgrounds_by_County_Outside_Adirondack___Catskill_Forest_Preserve.csv")
+#add lat/lon to a tibble for inputting to addMarkers() later
+points_campgrounds <- tibble(
+  label = points_campgrounds$Name,
+  long = points_campgrounds$Longitude,
+  lat = points_campgrounds$Latitude)
 
-map_server <- function(id, fills, points, pal){
-  moduleServer(id, function(input, output, session){
+points_3_campgrounds <- read_csv("raw-data/Campgrounds_by_County_Within_Adirondack___Catskill_Forest_Preserve.csv")
+#add lat/lon to a tibble for inputting to addMarkers() later
+points_3_campgrounds <- tibble(
+  label = points_3_campgrounds$Campground,
+  long = points_3_campgrounds$X,
+  lat = points_3_campgrounds$Y)
+
+points_campgrounds <- bind_rows(points_campgrounds, points_3_campgrounds)
+
+points_watchsites <- read_csv("raw-data/Watchable_Wildlife_Sites.csv")
+#add lat/lon to a tibble for inputting to addMarkers() later
+points_watchsites <- tibble(
+  label = points_watchsites$`Site Name`,
+  long = points_watchsites$Longitude,
+  lat = points_watchsites$Latitude)
+
+
+## Polygons-----
+
+# Load bundle saved from supported-polygons.R script
+load("counties_NY.rdata")
+
+# bring in biodiversity data 
+biodiversity <- read_csv("raw-data/Biodiversity_by_County_-_Distribution_of_Animals__Plants_and_Natural_Communities.csv")
+
+## Flowering Plant species------------
+
+# Species Abundance Selection
+flowering_plants <- biodiversity %>%  
+  group_by(County, `Taxonomic Group`) %>% 
+  filter(`Taxonomic Group` == "Flowering Plants") %>%
+  summarise(n())
+# Join and convert to Spatial Polygons
+flowering_plants <- flowering_plants %>%
+  rename("NAME" = 'County', 
+         "fill_value" = `n()`)
+
+# Make Spatial DataFrames with counties_NY
+# For flowering plants
+flowering_plants <- counties_NY %>%
+  left_join(flowering_plants, by = 'NAME')
+flowering_plants <- as_Spatial(flowering_plants)
+
+
+
+## Birds ------------
+# Species Abundance Selection (Birds)
+birds <- biodiversity %>%  
+  group_by(County, `Taxonomic Group`) %>% 
+  filter(`Taxonomic Group` == "Birds") %>%
+  summarise(n())
+# Join and convert to Spatial Polygons
+birds <- birds %>%
+  rename("NAME" = 'County', 
+         "fill_value" = `n()`)
+
+# For birds
+birds <- counties_NY %>%
+  left_join(birds, by = 'NAME')
+birds <- as_Spatial(birds)
+
+
+
+
+## Amphibians ------------
+# Species Abundance Selection
+amphibians <- biodiversity %>%  
+  group_by(County, `Taxonomic Group`) %>% 
+  filter(`Taxonomic Group` == "Amphibians") %>%
+  summarise(n())
+# Join and convert to Spatial Polygons
+amphibians <- amphibians %>%
+  rename("NAME" = 'County', 
+         "fill_value" = `n()`)
+
+# For amphibians
+amphibians <- counties_NY %>%
+  left_join(amphibians, by = 'NAME')
+amphibians <- as_Spatial(amphibians)
+
+
+
+## Reptiles------------
+
+# Species Abundance Selection
+reptiles <- biodiversity %>%  
+  group_by(County, `Taxonomic Group`) %>% 
+  filter(`Taxonomic Group` == "Reptiles") %>%
+  summarise(n())
+# Join and convert to Spatial Polygons
+reptiles <- reptiles %>%
+  rename("NAME" = 'County', 
+         "fill_value" = `n()`)
+
+# For reptiles
+reptiles <- counties_NY %>%
+  left_join(reptiles, by = 'NAME')
+reptiles <- as_Spatial(reptiles)
+
+
+
+
+
+# 2. Create lists per tab/theme-----------------
+
+
+## for tab 1-------------
+
+polys_flowering_plants <- list(
+    list(
+        name = 'flowering_plants',
+        data = flowering_plants,
+        label = 'name',
+        fill = 'fill_value'
+    )
+)
+
+points_flowering_plants <- list(
+    list(
+        name = 'points_parks',
+        data = points_parks,
+        long = 'long',
+        lat = 'lat',
+        label = 'label'
+    )
+)
+
+
+#palette scaling for polygon fills
+pal_flowering_max <- as.numeric(max(flowering_plants@data$fill_value))
+pal_flowering_min <- as.numeric(min(flowering_plants@data$fill_value))
+pal_flowering <- colorNumeric(c("RdYlGn"), pal_flowering_min:pal_flowering_max)
+
+
+
+## for tab 2-------------
+
+polys_birds <- list(
+  list(
+    name = 'birds',
+    data = birds,
+    label = 'name',
+    fill = 'fill_value'
+  )
+)
+
+points_birds <- list(
+  list(
+    name = 'points_watchsites',
+    data = points_watchsites,
+    long = 'long',
+    lat = 'lat',
+    label = 'label'
+  ),
+  list(
+    name = 'points_campgrounds',
+    data = points_campgrounds,
+    long = 'long',
+    lat = 'lat',
+    label = 'label'
     
-    output$mymap <- renderLeaflet({
-      leaflet(base_polygons, options = 
-                leafletOptions(minZoom = min_zoom)) %>% #don't let them zoom out too much
-        addTiles() %>%
-        #add base tiles with theme choice
-        addProviderTiles(provider = map_base_theme) %>%
-        #set center default point on map
-        setView(lng = center_long, lat = center_lat, zoom = min_zoom)
-      
-        
-        #anything with a for loop outside the add*** function returns this error, a leaflet thing I think
-        # error: 4 arguments passed to 'for' which requires 3
-        # for (fill in fills){
-        #   addPolygons(data = fill)
-        # }
+  )
+)
 
-        # addCircleMarkers(lng = datalist$tab1$fills@data$INTPTLON, 
-        #               lat = datalist$tab1$fills@data$INTPTLAT, 
-        #               popup = datalist$tab1$fills@data$fill_value,
-        #                color = "purple", radius = 2)
-      
-        addPolygons(weight = 1,
-                  fillOpacity = 0.7,
-                  color = ~theme1_pal(fills),
-                  label = ~paste("Label"),
-                  highlight = highlightOptions(weight = 1, color = "black", bringToFront = TRUE))
-        
-        addMarkers(lng = points,
-                   lat = points)
-      
-        #it can't find the polygon data with this method
-        ## error: Don't know how to get path data from object of class list
-        # addPolygons(
-        #   data = fills[1:length(fills)],
-        #   color = ~pal(fills@data$fill_value))
-
-      
-    })})}
-      
+#palette scaling for polygon fills
+pal_birds_max <- as.numeric(max(birds@data$fill_value))
+pal_birds_min <- as.numeric(min(birds@data$fill_value))
+pal_birds <- colorNumeric(c("RdYlGn"), pal_birds_min:pal_birds_max)
 
 
 
-### original code--------------
-# addPolygons(weight = 1,
-#             fillOpacity = 0.7,
-#             color = ~pal(df@data$fill_value),
-#             label = ~paste(df@data$NAME, signif(df@data$fill_value, digits = 6)),
-#             highlight = highlightOptions(weight = 1,
-#                                          color = "black",
-#                                          bringToFront = TRUE))
-#   addLegend(position = "bottomright", 
-#             pal = pal, values = df@data$fill_value)
-#   
-#   addCircleMarkers(lng = pts1$long, lat = pts1$lat, 
-#                    popup = pts1$label,
-#                    color = "purple", radius = 2)
+## for tab 3-------------
 
-      
-     
-        
+polys_amph_rept <- list(
+  list(
+    name = 'amphibians',
+    data = amphibians,
+    label = 'name',
+    fill = 'fill_value'
+  ), 
+  list(
+    name = 'reptiles',
+    data = reptiles,
+    label = 'label',
+    fill = 'fill_value'
+  )
+)
+
+points_amp_rept <- list(
+  list(
+    name = 'points_parks',
+    data = points_parks,
+    long = 'long',
+    lat = 'lat',
+    label = 'label'
+  ),
+  list(
+    name = 'points_campgrounds',
+    data = points_campgrounds,
+    long = 'long',
+    lat = 'lat',
+    label = 'label'
     
+  )
+)
+
+#palette scaling for polygon fills
+pal_amphibians_max <- as.numeric(max(amphibians@data$fill_value))
+pal_amphibians_min <- as.numeric(min(amphibians@data$fill_value))
+pal_amphibians <- colorNumeric(c("RdYlGn"), pal_amphibians_min:pal_amphibians_max)
 
 
 
+# 3. Set ui/layout --------
+ui <- fluidPage(
+    titlePanel("Package Test Map"),
 
-# Define overall UI -----
+    # sidebarLayout(
+    #     sidebarPanel(
+    #     ),
 
-ui <- dashboardPage(skin = "purple",
-                    
-                    
-                    dashboardHeader(title = "Package Drafting"),
-                    dashboardSidebar(
-                      sidebarMenu(
-                        menuItem("Flowering Plants", tabName = "Flowering Plants")
-                        #menuItem(theme2_name, tabName = theme2_name),
-                        #menuItem(theme3_name, tabName = theme3_name),
-                        #menuItem(theme4_name, tabName = theme4_name),
-                        #menuItem("About", tabName = "about")
-                      )
-                    ),
-                    dashboardBody(
-                      tabItems(
-                        tabItem(tabName = "Flowering Plants",
-                                class = "active",  #necessary only on first tab to make active it appears
-                                map_UI("Flowering Plants"))
-                        
-                      )))
-                        
-                        
-                        # 
-                        # ,
-                        #         
-                        # tabItem(tabName = theme2_name,
-                        #         map_UI("theme2_map")),
-                        # 
-                        # tabItem(tabName = theme3_name,
-                        #         map_UI("theme3_map")),
-                        # 
-                        # tabItem(tabName = theme4_name,
-                        #         map_UI("theme4_map")),
-                        # 
-                        # 
-                        # tabItem(tabName = "about",
-                        #         h3(strong("About")), 
-                        #         h5("This is a module designed with 
-                        #                 diversity in mind; species diversity
-                        #                 that is. Through the tabs on the left 
-                        #                 you can navigate through different species
-                        #                 abundances to see how many unique species appear 
-                        #                 in each county within the U.S. state of New York."), 
-                        #         h5(em("Data comes from the State of New York")))
-                        # 
-                   
-                    
+        mainPanel(
+            tabsetPanel(
+                tabPanel('Flowering Plants', map_UI('flowering_plants')),
+                tabPanel('Birds', map_UI('birds')),
+                tabPanel('Amphibians & Reptiles', map_UI('amph_rept'))
+            )
+            
+        )
+    )
 
 
-# Server --------
 
-
-### need a way, a function?? to generate the map_server lines, one for each theme/item in list
-### user dummy one below that is done manually for now
-
-
-# create_map_servers <- function(datalist) {
-#   
-#   for(theme in 1:length(datalist)){
-#   title <- datalist[[theme]]$title
-#   fills <- datalist[[theme]]$fills
-#   points <- datalist[[theme]]$points
-#     }
-#   
-#   
-#   return(paste0("map_server(", )
-# }
-
+# 4. Create 1 map_server per theme/tab ------
 
 server <- function(input, output) {
-  
-  # Theme 1 Tab --------------------------------------------------------------
-  map_server("Flowering Plants", 
-             fills = datalist$tab1$fills@polygons, # Closer, sometimes displays the polygons
-             points = datalist$tab2$points[[1]]$label, # Left alone, not yet functioning
-             pal = theme1_pal) 
-  
-  }
-  
-  
-  
-  # # Theme 1 Tab --------------------------------------------------------------
-  # map_server("theme1_map", df = theme1_poly_fill_1, pts1 = theme1_pts_1, pts2 = theme1_pts_2, pal = theme1_pal) 
-  #            
-  # 
-  # # Theme 2 Tab ---------------------------------------------------------------
-  # map_server("theme2_map", df = theme2_poly_fill_1, pts1 = theme2_pts_1, pts2 = theme2_pts_2, pal = theme2_pal) 
-  # 
-  # # Theme 3 Tab----------------------------------------------------------------
-  # map_server("theme3_map", df = theme3_poly_fill_1, pts1 = theme3_pts_1, pts2 = theme3_pts_2, pal = theme3_pal) 
-  # 
-  # # Theme 4 Tab----------------------------------------------------------------
-  # map_server("theme4_map", df = theme4_poly_fill_1, pts1 = theme4_pts_1, pts2 = theme4_pts_2, pal = theme4_pal) 
-  # 
+    map_server("flowering_plants", 
+               polygons = polys_flowering_plants,
+               points = points_flowering_plants,
+               pal = pal_flowering
+               ) 
+    map_server("birds", 
+             polygons = polys_birds,
+             points = points_birds,
+             pal = pal_birds
+              ) 
+    map_server("amph_rept", 
+             polygons = polys_amph_rept,
+             points = points_amp_rept,
+             pal = pal_amphibians
+  ) 
+}
 
 
-
-
-# App call --------
+# Run the application 
 shinyApp(ui = ui, server = server)
-
-
-
