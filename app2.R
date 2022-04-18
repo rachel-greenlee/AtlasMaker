@@ -38,26 +38,26 @@ AgFairs <- AgFairs %>%
 points_complaints <- tibble(
   #add lat/lon to a tibble for inputting to addMarkers() later
   label = Complaints$pd_desc, 
-  long = Complaints$longitude, 
-  lat = Complaints$latitude
+  long = as.numeric(Complaints$longitude), 
+  lat = as.numeric(Complaints$latitude)
 )
 
 points_MVColisions <- tibble(
   label = MVColisions$collision_id, 
-  long = MVColisions$longitude, 
-  lat = MVColisions$latitude
+  long = as.numeric(MVColisions$longitude), 
+  lat = as.numeric(MVColisions$latitude)
 )
 
 points_lotto <- tibble(
   label = Lotto$name,
-  long = Lotto$longitude, 
-  lat = Lotto$latitude
+  long = as.numeric(Lotto$longitude), 
+  lat = as.numeric(Lotto$latitude)
 )
 
 points_fish <- tibble(
   label = BestFish$name, 
-  long = BestFish$location.longitude, 
-  lat = BestFish$location.latitude
+  long = as.numeric(BestFish$location.longitude), 
+  lat = as.numeric(BestFish$location.latitude)
 )
   
 # No binding necessary for these datasets
@@ -144,7 +144,7 @@ polys_income <- list(
 points_lotto <- list(
   list(
     name = 'Lotto',
-    data = Lotto,
+    data = points_lotto,
     long = 'longitude',
     lat = 'latitude',
     label = 'name'
@@ -172,7 +172,7 @@ polys_evs <- list(
 points_fish <- list(
   list(
     name = 'bestfish',
-    data = BestFish,
+    data = points_fish,
     long = 'location.longitude',
     lat = 'location.latitude',
     label = 'fish_spec'
@@ -198,7 +198,7 @@ polys_hatecrimes <- list(
 points_hatecrimeslotto <- list(
   list(
     name = 'Lotto',
-    data = Lotto,
+    data = points_lotto,
     long = 'longitude',
     lat = 'latitude',
     label = 'name'

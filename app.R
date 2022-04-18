@@ -218,6 +218,14 @@ polys_amph_rept <- list(
   )
 )
 
+
+polygon_names <- list()
+for(i in length(polys_amph_rept)){
+  output <- polys_amph_rept[[i]]$name
+  polygon_names <- append(polygon_names, output)}
+
+
+
 points_amp_rept <- list(
   list(
     name = 'points_parks',
@@ -235,6 +243,14 @@ points_amp_rept <- list(
     
   )
 )
+
+
+point_names <- list()
+for(i in length(points_amp_rept)){
+  output <- points_amp_rept[[i]]$name
+  point_names <- append(point_names, output)}
+
+
 
 #palette scaling for polygon fills
 pal_amphibians_max <- as.numeric(max(amphibians@data$fill_value))
