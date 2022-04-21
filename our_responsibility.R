@@ -143,7 +143,7 @@ map_server <- function(id,
 			####interactivity-------------
 			map <- map %>% addLayersControl(baseGroups = polygon_names,
 			                 overlayGroups = c(point_names, polyline_names),
-			                 options = layersControlOptions(collapsed = FALSE))
+			                 options = layersControlOptions(collapsed = F))
 			
 			return(map)
 			

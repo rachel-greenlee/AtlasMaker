@@ -59,7 +59,7 @@ points_fish <- tibble(
   long = as.numeric(BestFish$location.longitude), 
   lat = as.numeric(BestFish$location.latitude)
 )
-  
+
 # No binding necessary for these datasets
 
 ## ----- Polygons -----
@@ -119,7 +119,7 @@ Boats <- as_Spatial(Boats)
 
 ## Hate Crimes in NY State 
 HateCrimes <- HateCrimes %>% 
-  transmute(NAME = toupper(county), 
+  transmute(NAME = toupper(county), # transmutation has something to do with -> sf? 
             year = as.numeric(year), 
             fill_value = total_victims) 
 HateCrimes <- counties_NY %>% 
@@ -188,6 +188,15 @@ pal_evs <- colorNumeric(c("RdYlGn"), pal_evs_min:pal_evs_max) # Woot!
 
 ## for tab 3-------------
 
+polys_boats <- list(
+  name = 'boats', 
+  data = Boats, 
+  label = 'NAME', 
+  fill = 'fill_value'
+)
+
+# reuse points_fish 
+
 polys_hatecrimes <- list(
     name = 'hatecrimes',
     data = HateCrimes,
@@ -209,7 +218,17 @@ points_hatecrimeslotto <- list(
 pal_hatecrimes_max <- as.numeric(max(HateCrimes@data$fill_value, na.rm = T)) # Improved!  
 pal_hatecrimes_min <- as.numeric(min(HateCrimes@data$fill_value, na.rm = T)) # Now works with missing values
 pal_hatecrimes <- colorNumeric(c("RdYlGn"), pal_hatecrimes_min:pal_hatecrimes_max) # Woot! 
+pal_boats_max <- as.numeric(max(Boats@data$fill_value, na.rm = T))
+pal_boats_min <- as.numeric(min(Boats@data$fill_value, na.rm = T))
+pal_boats <- colorNumeric(c("RdYlGn"), pal_boats_min:pal_boats_max)
 
+
+## Combine the lists for mapping
+
+all <- list( 
+  polys = list(polys_income, polys_evs, polys_boats), 
+  points = list(points_lotto, points_fish, points_fish)
+)
 
 
 # 3. Set ui/layout --------
@@ -224,7 +243,7 @@ ui <- fluidPage(
     tabsetPanel(
       tabPanel('Income & Lotto', map_UI('income')),
       tabPanel('EVs and Fish', map_UI('fishevs')),
-      tabPanel('Hate Crimes', map_UI('hatecrimes'))
+      tabPanel('Boats and Fish', map_UI('boatsfish'))
     )
     
   )
@@ -235,21 +254,27 @@ ui <- fluidPage(
 server <- function(input, output) {
 # 4. Create 1 map_server per theme/tab ------
 
-  map_server("income", 
-             polygons = polys_income,
-             points = points_lotto,
-             pal = pal_income
-  ) 
-  map_server("fishevs", 
-             polygons = polys_evs,
-             points = points_fish,
-             pal = pal_evs
-  ) 
-  map_server("hatecrimes", 
-             polygons = polys_hatecrimes,
-             points = points_hatecrimeslotto,
-             pal = pal_hatecrimes
-  ) 
+  # map_server("income", 
+  #            polygons = all$polys, 
+  #            points = all$points, 
+  #            pal = pal_income
+  #  )
+ map_server("income",
+            polygons = polys_income,
+            points = points_lotto,
+            pal = pal_income
+ )
+ map_server("fishevs",
+            polygons = polys_evs,
+            points = points_fish,
+            pal = pal_evs
+ )
+ map_server("boatsfish",
+            polygons = polys_boats,
+            points = points_fish,
+            pal = pal_boats
+ )
+
 }
 
 
