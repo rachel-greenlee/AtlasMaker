@@ -3,11 +3,8 @@
 ##### TO DO LIST ######
 # <- put initials in front when done
 
-#if polygons >1, create interactive dropdown menu
-#all points, create interactive checkbox
 #add code for adding polylines (good time to test this code with new data Zach found) 
-# ^^^ copy app.R and update to new data? ^^^
-#add an about page
+
 #explore other leaflet features we want to default and/or let user set
 
 
@@ -16,6 +13,9 @@
 #RLG - get color palettes working
 #RLG - get popups/labels working on polygons and points
 #RLG - legend back in action
+#RLG - if polygons >1, create interactive dropdown menu
+#RLG - all points, create interactive checkbox
+#ZP -  copy app.R and update to new data? ^^^
 
 
 

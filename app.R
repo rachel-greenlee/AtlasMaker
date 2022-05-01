@@ -47,9 +47,15 @@ points_watchsites <- tibble(
   lat = points_watchsites$Latitude)
 
 
-## Polygons-----
+## Polylines ----
+# Load bundle saved from tigris_imports.R
+load("clinton_county_roads.rdata")
 
-# Load bundle saved from supported-polygons.R script
+clinton_roads <- as_Spatial(clinton_county_roads)
+
+
+
+## Polygons-----
 load("counties_NY.rdata")
 
 # bring in biodiversity data 
@@ -146,6 +152,15 @@ polys_flowering_plants <- list(
         fill = 'fill_value'
     )
 )
+
+
+lines_flowering_plants <- list(
+  list(
+    name = 'clinton_roads',
+    data = clinton_county_roads
+  )
+)
+
 
 points_flowering_plants <- list(
     list(
@@ -284,16 +299,19 @@ ui <- fluidPage(
 server <- function(input, output) {
     map_server("flowering_plants", 
                polygons = polys_flowering_plants,
+               polylines = lines_flowering_plants,
                points = points_flowering_plants,
                pal = pal_flowering
                ) 
     map_server("birds", 
              polygons = polys_birds,
+             polylines = NULL,
              points = points_birds,
              pal = pal_birds
               ) 
     map_server("amph_rept", 
              polygons = polys_amph_rept,
+             polylines = NULL,
              points = points_amp_rept,
              pal = pal_amphibians
   ) 
