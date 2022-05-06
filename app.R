@@ -53,6 +53,9 @@ load("clinton_county_roads.rdata")
 
 clinton_roads <- as_Spatial(clinton_county_roads)
 
+load('ny_roads.rdata') # May take a long time (2 - 5 minutes) - not run*
+# sample_ny_roads is all that is required - only 6000 obs vs 1+ million 
+ny_sample_roads <- as_Spatial(sample_ny_roads)
 
 
 ## Polygons-----
@@ -191,6 +194,15 @@ polys_birds <- list(
   )
 )
 
+lines_birds <- list(
+  list(
+    name = 'ny_roads_sample',
+    data = ny_sample_roads
+  )
+)
+
+
+
 points_birds <- list(
   list(
     name = 'points_watchsites',
@@ -235,10 +247,9 @@ polys_amph_rept <- list(
 
 
 polygon_names <- list()
-for(i in length(polys_amph_rept)){
+for(i in 1:length(polys_amph_rept)){
   output <- polys_amph_rept[[i]]$name
   polygon_names <- append(polygon_names, output)}
-
 
 
 points_amp_rept <- list(
@@ -266,11 +277,68 @@ for(i in length(points_amp_rept)){
   point_names <- append(point_names, output)}
 
 
-
 #palette scaling for polygon fills
 pal_amphibians_max <- as.numeric(max(amphibians@data$fill_value))
 pal_amphibians_min <- as.numeric(min(amphibians@data$fill_value))
 pal_amphibians <- colorNumeric(c("RdYlGn"), pal_amphibians_min:pal_amphibians_max)
+
+
+## ----- Tab 4 ---- ## 
+# All Polygons
+polys_all <- list(
+  list(
+    name = 'flowering_plants',
+    data = flowering_plants,
+    label = 'name',
+    fill = 'fill_value'
+  ),
+  list(
+    name = 'birds',
+    data = birds,
+    label = 'name',
+    fill = 'fill_value'
+  ),
+  list(
+    name = 'amphibians',
+    data = amphibians,
+    label = 'name',
+    fill = 'fill_value'
+  ), 
+  list(
+    name = 'reptiles',
+    data = reptiles,
+    label = 'label',
+    fill = 'fill_value'
+  )
+)
+
+polygon_names <- list()
+for(i in 1:length(polys_all)){
+  output <- polys_all[[i]]$name
+  polygon_names <- append(polygon_names, output)}
+
+# All Points
+points_all <- list(
+  list(
+    name = 'points_parks',
+    data = points_parks,
+    long = 'long',
+    lat = 'lat',
+    label = 'label'
+  ),
+  list(
+    name = 'points_campgrounds',
+    data = points_campgrounds,
+    long = 'long',
+    lat = 'lat',
+    label = 'label'
+  )
+)
+
+point_names <- list()
+for(i in length(points_all)){
+  output <- points_all[[i]]$name
+  point_names <- append(point_names, output)}
 
 
 
@@ -286,7 +354,8 @@ ui <- fluidPage(
             tabsetPanel(
                 tabPanel('Flowering Plants', map_UI('flowering_plants')),
                 tabPanel('Birds', map_UI('birds')),
-                tabPanel('Amphibians & Reptiles', map_UI('amph_rept'))
+                tabPanel('Amphibians & Reptiles', map_UI('amph_rept')),
+                tabPanel("All", map_UI("allthegoods"))
             )
             
         )
@@ -305,7 +374,7 @@ server <- function(input, output) {
                ) 
     map_server("birds", 
              polygons = polys_birds,
-             polylines = NULL,
+             polylines = lines_birds,
              points = points_birds,
              pal = pal_birds
               ) 
@@ -315,6 +384,10 @@ server <- function(input, output) {
              points = points_amp_rept,
              pal = pal_amphibians
   ) 
+    map_server("allthegoods", 
+               polygons = polys_all_names, 
+               polylines = points_amp_rept, 
+               pal = pal_birds)
 }
 
 

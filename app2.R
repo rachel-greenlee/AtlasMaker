@@ -230,6 +230,46 @@ all <- list(
   points = list(points_lotto, points_fish, points_fish)
 )
 
+## ------ Tab 4 ------ ## 
+# Polygons
+polys_all <- list(
+  list(
+    name = 'Income_class',
+    data = Income,
+    label = 'NAME',
+    fill = 'fill_value'
+  ),
+  list(
+    name = 'evs',
+    data = evs,
+    label = 'NAME',
+    fill = 'fill_value'
+  ), 
+  list(
+    name = 'boats', 
+    data = Boats, 
+    label = 'NAME', 
+    fill = 'fill_value'
+  )
+)
+# Points 
+points_all <- list(
+  list(
+    name = 'Lotto',
+    data = points_lotto,
+    long = 'longitude',
+    lat = 'latitude',
+    label = 'name'
+  ),
+  list(
+    name = 'bestfish',
+    data = points_fish,
+    long = 'location.longitude',
+    lat = 'location.latitude',
+    label = 'fish_spec'
+  )
+)
+
 
 # 3. Set ui/layout --------
 ui <- fluidPage(
@@ -243,7 +283,8 @@ ui <- fluidPage(
     tabsetPanel(
       tabPanel('Income & Lotto', map_UI('income')),
       tabPanel('EVs and Fish', map_UI('fishevs')),
-      tabPanel('Boats and Fish', map_UI('boatsfish'))
+      tabPanel('Boats and Fish', map_UI('boatsfish')), 
+      tabPanel("Two Points", map_UI('twopoints'))
     )
     
   )
@@ -274,9 +315,20 @@ server <- function(input, output) {
             points = points_fish,
             pal = pal_boats
  )
+ map_server("twopoints", 
+            polygons = polys_income, 
+            points = points_all[[1]], 
+            pal = pal_income)
+ 
+ # map_sever("all", 
+ #           polygons = polys_all[1], 
+ #           points = points_all[1], 
+ #           pal = pal_income)
 
 }
 
+
+points_all[[1]]
 
 # Run the application 
 shinyApp(ui = ui, server = server)
