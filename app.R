@@ -49,13 +49,14 @@ points_watchsites <- tibble(
 
 ## Polylines ----
 # Load bundle saved from tigris_imports.R
-load("clinton_county_roads.rdata")
 
-clinton_roads <- as_Spatial(clinton_county_roads)
-
-load('ny_roads.rdata') # May take a long time (2 - 5 minutes) - not run*
+#load('ny_roads.rdata') # May take a long time (2 - 5 minutes) - not run*
 # sample_ny_roads is all that is required - only 6000 obs vs 1+ million 
-ny_sample_roads <- as_Spatial(sample_ny_roads)
+
+
+#interstate only
+load('roads_ny_interstate.rdata')
+roads_ny_interstate <- as_Spatial(roads_ny_interstate)
 
 
 ## Polygons-----
@@ -157,12 +158,6 @@ polys_flowering_plants <- list(
 )
 
 
-lines_flowering_plants <- list(
-  list(
-    name = 'clinton_roads',
-    data = clinton_county_roads
-  )
-)
 
 
 points_flowering_plants <- list(
@@ -196,8 +191,8 @@ polys_birds <- list(
 
 lines_birds <- list(
   list(
-    name = 'ny_roads_sample',
-    data = ny_sample_roads
+    name = 'ny_interstates',
+    data = roads_ny_interstate
   )
 )
 
@@ -283,7 +278,7 @@ pal_amphibians_min <- as.numeric(min(amphibians@data$fill_value))
 pal_amphibians <- colorNumeric(c("RdYlGn"), pal_amphibians_min:pal_amphibians_max)
 
 
-## ----- Tab 4 ---- ## 
+## for tab 4-------------
 # All Polygons
 polys_all <- list(
   list(
@@ -336,7 +331,7 @@ points_all <- list(
 )
 
 point_names <- list()
-for(i in length(points_all)){
+for(i in 1:length(points_all)){
   output <- points_all[[i]]$name
   point_names <- append(point_names, output)}
 
@@ -368,7 +363,7 @@ ui <- fluidPage(
 server <- function(input, output) {
     map_server("flowering_plants", 
                polygons = polys_flowering_plants,
-               polylines = lines_flowering_plants,
+               polylines = NULL,
                points = points_flowering_plants,
                pal = pal_flowering
                ) 
@@ -385,9 +380,10 @@ server <- function(input, output) {
              pal = pal_amphibians
   ) 
     map_server("allthegoods", 
-               polygons = polys_all_names, 
-               polylines = points_amp_rept, 
-               pal = pal_birds)
+               polygons = polys_all, 
+               polylines = NULL,
+               points = points_all,
+               pal = pal_flowering)
 }
 
 

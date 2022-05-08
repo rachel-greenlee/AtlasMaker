@@ -69,6 +69,7 @@ map_server <- function(id,
         
         for(i in 1:length(polygons)) {
           map <- map %>% addPolygons(data = polygons[[i]]$data,
+                                     layerId = ~polygons,
                                      weight = 1,
                                      fillOpacity = 0.7,
                                      color = ~pal(polygons[[i]]$data$fill_value),
@@ -115,7 +116,7 @@ map_server <- function(id,
       
       
       
-      ####draft of polyline code to try?------
+      ####polylines------
       polyline_names <- list()
       
       
@@ -134,7 +135,7 @@ map_server <- function(id,
         
         
         for(i in 1:length(polylines)) {
-          map <- map %>% addPolygons(data = polylines[[i]]$data,
+          map <- map %>% addPolylines(data = polylines[[i]]$data,
                                      group = polyline_names) 
           
         } }
@@ -143,7 +144,8 @@ map_server <- function(id,
       ####interactivity-------------
       map <- map %>% addLayersControl(baseGroups = polygon_names,
                                       overlayGroups = c(point_names, polyline_names),
-                                      options = layersControlOptions(collapsed = F))
+                                      options = layersControlOptions(collapsed = F),
+                                      data = getMapData(map))
       
       return(map)
       
