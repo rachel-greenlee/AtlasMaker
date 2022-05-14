@@ -9,8 +9,8 @@ library(sf)
 
 
 #running the script that represents our eventual package
-source('our_responsibility.R') # eventually this would library(something)
-
+# source('our_responsibility.R') # eventually this would library(something)
+source('our_responsibility_copy.R')
 
 # 1. Pre-processing data into dataframes------
 
@@ -312,6 +312,8 @@ for(i in 1:length(polys_all)){
   output <- polys_all[[i]]$name
   polygon_names <- append(polygon_names, output)}
 
+?leaflet::addPolygons()
+
 # All Points
 points_all <- list(
   list(
@@ -334,6 +336,136 @@ point_names <- list()
 for(i in 1:length(points_all)){
   output <- points_all[[i]]$name
   point_names <- append(point_names, output)}
+
+
+### ----- Color Testing Delete Later ----- ###
+# min(polys_all[[1]]$data$fill_value)
+# min(polys_all[[2]]$data$fill_value)
+# min(polys_all[[3]]$data$fill_value)
+# min(polys_all[[4]]$data$fill_value)
+# 
+# function(d){
+#   d[[1]]$data$fill_value
+# }
+# 
+# pal_amphibians_max <- as.numeric(max(amphibians@data$fill_value))
+# pal_amphibians_min <- as.numeric(min(amphibians@data$fill_value))
+# pal_amphibians <- colorNumeric(c("RdYlGn"), pal_amphibians_min:pal_amphibians_max)
+# 
+# for (i in 1:length(polys_all)){
+#   mn <- as.numeric(min(polys_all[[i]]$data$fill_value))
+#   mx <- as.numeric(max(polys_all[[i]]$data$fill_value))
+#   pal_df <- colorNumeric(c("RdYlGn"), mn:mx)
+#   list()
+# }
+# 
+# brew_pal <- function(d){
+#   mn <- as.numeric(min(d[[1]]$data$fill))
+#   mx <- as.numeric(max(d[[1]]$data$fill))
+#   pal_cols <- colorNumeric(c("RdYlGn"), mn:mx)
+# }
+# 
+# brew_pal(polys_amph_rept)
+
+
+# function(polys_all){
+# 
+#   for (i in 1:length(polys_all)){
+#       mn <- as.numeric(min(polys_all[[i]]$data$fill_value))
+#       mx <- as.numeric(max(polys_all[[i]]$data$fill_value))
+#       pal_df <- colorNumeric(c("RdYlGn"), mn:mx)
+#   }
+# 
+# }
+# 
+# for (i in polys_all){
+# 
+# }
+# 
+# pal_sel <- function(d){
+#   for(i in 1:length(d)){
+#     mn <- as.numeric(min(d[[i]]$data$fill_value))
+#     mx <- as.numeric(max(d[[i]]$data$fill_value))
+#     pal_df <- colorNumeric(c("RdYlGn"), mn:mx)
+#   }
+#   return(pal_df)
+# }
+# 
+# pal_selector <- function(d){
+#   pal <- colorNumeric(c("RdYlGn"), 
+#     as.numeric(min(d[[i]]$data$fill_value)):as.numeric(max(d[[i]]$data$fill_value)))
+#   return(pal)
+# }
+# 
+# pal <- colorNumeric(c("RdYlGn"), min():max())
+
+# RColorBrewer::display.brewer.pal(4, "RdYlGn")
+# 
+# ifelse(d[[1]]$data$fill_value = !is.na,  )
+# if(d[[1]]
+#   colorNumeric()
+# 
+#   
+# for (i in 1:length(d)){
+#   
+# }
+
+# colorNumeric(c("RdYlGn"), 
+#             domain = min(polys_all[[2]]$data$fill_value):max(polys_all[[2]]$data$fill_value))
+# 
+# colorNumeric(c("RdylGn"), min(polygons[[i]]$data$fill_value):max(polygons[[i]]$data$fill_value))
+
+pal_amphibians_max <- as.numeric(max(amphibians@data$fill_value))
+pal_amphibians_min <- as.numeric(min(amphibians@data$fill_value))
+pal_amphibians <- colorNumeric(c("RdYlGn"), pal_amphibians_min:pal_amphibians_max)
+
+pal_selector1 <- function(sf){
+  if(sf[[1]]$name == "flowering_plants"){
+    return(pal_flowering)
+  } else if(sf[[2]]$name == "birds"){
+    return(pal_birds)
+  } else if(sf[[3]]$name == "amphibians"){
+    return(pal_amphibians)
+  } else if(sf[[4]]$name == "reptiles"){
+    return("not available")
+  }
+}
+
+# Function needs to adapt to each polygon selection: 
+# *identify the layer that is selected* how to do this in the module?
+# find the min and max 
+# assign colors over the range for a given color palette
+
+
+
+pal_selector2 <- function(W){
+
+  palette =function(X){
+    pal_x = colorNumeric(c("RdYlGn"), min(polygons[[i]]$data$fill_value):max(polygons[[i]]$data$fill_value)) 
+    return(pal_x)
+  }
+  assign("pal_x", palette, envir = .GlobalEnv)
+  return(invisible())
+}
+
+pal_selector3 <- function(W){
+  
+  palette =function(X){
+    pal_x = colorNumeric(c("RdYlGn"), min(polygons[[i]]$data$fill_value):max(polygons[[i]]$data$fill_value)) 
+    return(pal_x)
+  }
+  return(palette)
+}
+
+
+# pal_selector2(polys_flowering_plants)
+
+# 
+# 
+# 
+# pal_selector(sf = polys_all)
+
+### ----- End Color Testing ----- ###
 
 
 
@@ -378,12 +510,13 @@ server <- function(input, output) {
              polylines = NULL,
              points = points_amp_rept,
              pal = pal_amphibians
-  ) 
+            ) 
     map_server("allthegoods", 
                polygons = polys_all, 
                polylines = NULL,
                points = points_all,
-               pal = pal_flowering)
+               pal = pal_flowering
+              )
 }
 
 

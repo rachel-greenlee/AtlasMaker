@@ -68,6 +68,9 @@ map_server <- function(id,
         
         
         for(i in 1:length(polygons)) {
+          mn <- as.numeric(min(polygons[[i]]$data$fill_value))
+          mx <-as.numeric(max(polygons[[i]]$data$fill_value))
+          pal_x <- colorNumeric(c("RdYlGn"), mn:mx)
           map <- map %>% addPolygons(data = polygons[[i]]$data,
                                      layerId = ~polygons,
                                      weight = 1,
@@ -76,7 +79,7 @@ map_server <- function(id,
                                      # Select polygon_names[[i]] then filter?
                                      # (colorNumeric(c("RdYlGn"), 
                                      #               min(polygons[[i]]$data$fill_value):max(polygons[[i]]$data$fill_value)))
-                                     color = ~pal(polygons[[i]]$data$fill_value), 
+                                     color = ~pal_x(polygons[[i]]$data$fill_value), 
                                      label = ~paste(polygons[[i]]$data$NAME, polygons[[i]]$data$fill_value),
                                      highlight = highlightOptions(weight = 1,
                                                                   color = "black"),
@@ -84,7 +87,7 @@ map_server <- function(id,
             
             
             addLegend(position = "bottomright", 
-                      pal = pal, values = polygons[[i]]$data$fill_value)
+                      pal = pal_x, values = polygons[[i]]$data$fill_value)
           
           
         }
@@ -140,7 +143,7 @@ map_server <- function(id,
         
         for(i in 1:length(polylines)) {
           map <- map %>% addPolylines(data = polylines[[i]]$data,
-                                     group = polyline_names) 
+                                      group = polyline_names) 
           
         } }
       
