@@ -9,8 +9,8 @@ library(sf)
 
 
 #running the script that represents our eventual package
-# source('our_responsibility.R') # eventually this would library(something)
-source('our_responsibility_copy.R')
+# eventually this would library(something)
+source('AtlasMaker.R')
 
 # 1. Pre-processing data into dataframes------
 
@@ -49,24 +49,21 @@ points_watchsites <- tibble(
 
 ## Polylines ----
 # Load bundle saved from tigris_imports.R
-
-#load('ny_roads.rdata') # May take a long time (2 - 5 minutes) - not run*
-# sample_ny_roads is all that is required - only 6000 obs vs 1+ million 
-
-
 #interstate only
 load('roads_ny_interstate.rdata')
 roads_ny_interstate <- as_Spatial(roads_ny_interstate)
 
 
 ## Polygons-----
+# laod bundle saved from tigris_imports.R of county shapefiles and names
 load("counties_NY.rdata")
 
-# bring in biodiversity data 
+## Polygon fill, data prep-----
+
+# bring in biodiversity data that will be plotted via county
 biodiversity <- read_csv("raw-data/Biodiversity_by_County_-_Distribution_of_Animals__Plants_and_Natural_Communities.csv")
 
-## Flowering Plant species------------
-
+## Flowering Plant species
 # Species Abundance Selection
 flowering_plants <- biodiversity %>%  
   group_by(County, `Taxonomic Group`) %>% 
@@ -76,16 +73,13 @@ flowering_plants <- biodiversity %>%
 flowering_plants <- flowering_plants %>%
   rename("NAME" = 'County', 
          "fill_value" = `n()`)
-
 # Make Spatial DataFrames with counties_NY
-# For flowering plants
 flowering_plants <- counties_NY %>%
   left_join(flowering_plants, by = 'NAME')
 flowering_plants <- as_Spatial(flowering_plants)
 
 
-
-## Birds ------------
+## Birds
 # Species Abundance Selection (Birds)
 birds <- biodiversity %>%  
   group_by(County, `Taxonomic Group`) %>% 
@@ -95,16 +89,13 @@ birds <- biodiversity %>%
 birds <- birds %>%
   rename("NAME" = 'County', 
          "fill_value" = `n()`)
-
 # For birds
 birds <- counties_NY %>%
   left_join(birds, by = 'NAME')
 birds <- as_Spatial(birds)
 
 
-
-
-## Amphibians ------------
+## Amphibians
 # Species Abundance Selection
 amphibians <- biodiversity %>%  
   group_by(County, `Taxonomic Group`) %>% 
@@ -114,16 +105,13 @@ amphibians <- biodiversity %>%
 amphibians <- amphibians %>%
   rename("NAME" = 'County', 
          "fill_value" = `n()`)
-
 # For amphibians
 amphibians <- counties_NY %>%
   left_join(amphibians, by = 'NAME')
 amphibians <- as_Spatial(amphibians)
 
 
-
-## Reptiles------------
-
+## Reptiles
 # Species Abundance Selection
 reptiles <- biodiversity %>%  
   group_by(County, `Taxonomic Group`) %>% 
@@ -133,7 +121,6 @@ reptiles <- biodiversity %>%
 reptiles <- reptiles %>%
   rename("NAME" = 'County', 
          "fill_value" = `n()`)
-
 # For reptiles
 reptiles <- counties_NY %>%
   left_join(reptiles, by = 'NAME')
@@ -142,12 +129,9 @@ reptiles <- as_Spatial(reptiles)
 
 
 
-
 # 2. Create lists per tab/theme-----------------
 
-
-## for tab 1-------------
-
+## for tab 1: flowering plants-------------
 polys_flowering_plants <- list(
     list(
         name = 'flowering_plants',
@@ -156,9 +140,6 @@ polys_flowering_plants <- list(
         fill = 'fill_value'
     )
 )
-
-
-
 
 points_flowering_plants <- list(
     list(
@@ -170,16 +151,7 @@ points_flowering_plants <- list(
     )
 )
 
-
-#palette scaling for polygon fills
-pal_flowering_max <- as.numeric(max(flowering_plants@data$fill_value))
-pal_flowering_min <- as.numeric(min(flowering_plants@data$fill_value))
-pal_flowering <- colorNumeric(c("RdYlGn"), pal_flowering_min:pal_flowering_max)
-
-
-
 ## for tab 2-------------
-
 polys_birds <- list(
   list(
     name = 'birds',
@@ -196,8 +168,6 @@ lines_birds <- list(
   )
 )
 
-
-
 points_birds <- list(
   list(
     name = 'points_watchsites',
@@ -212,16 +182,8 @@ points_birds <- list(
     long = 'long',
     lat = 'lat',
     label = 'label'
-    
   )
 )
-
-#palette scaling for polygon fills
-pal_birds_max <- as.numeric(max(birds@data$fill_value))
-pal_birds_min <- as.numeric(min(birds@data$fill_value))
-pal_birds <- colorNumeric(c("RdYlGn"), pal_birds_min:pal_birds_max)
-
-
 
 ## for tab 3-------------
 
@@ -240,13 +202,6 @@ polys_amph_rept <- list(
   )
 )
 
-
-polygon_names <- list()
-for(i in 1:length(polys_amph_rept)){
-  output <- polys_amph_rept[[i]]$name
-  polygon_names <- append(polygon_names, output)}
-
-
 points_amp_rept <- list(
   list(
     name = 'points_parks',
@@ -264,19 +219,6 @@ points_amp_rept <- list(
     
   )
 )
-
-
-point_names <- list()
-for(i in length(points_amp_rept)){
-  output <- points_amp_rept[[i]]$name
-  point_names <- append(point_names, output)}
-
-
-#palette scaling for polygon fills
-pal_amphibians_max <- as.numeric(max(amphibians@data$fill_value))
-pal_amphibians_min <- as.numeric(min(amphibians@data$fill_value))
-pal_amphibians <- colorNumeric(c("RdYlGn"), pal_amphibians_min:pal_amphibians_max)
-
 
 ## for tab 4-------------
 # All Polygons
@@ -307,13 +249,6 @@ polys_all <- list(
   )
 )
 
-polygon_names <- list()
-for(i in 1:length(polys_all)){
-  output <- polys_all[[i]]$name
-  polygon_names <- append(polygon_names, output)}
-
-?leaflet::addPolygons()
-
 # All Points
 points_all <- list(
   list(
@@ -332,151 +267,10 @@ points_all <- list(
   )
 )
 
-point_names <- list()
-for(i in 1:length(points_all)){
-  output <- points_all[[i]]$name
-  point_names <- append(point_names, output)}
-
-
-### ----- Color Testing Delete Later ----- ###
-# min(polys_all[[1]]$data$fill_value)
-# min(polys_all[[2]]$data$fill_value)
-# min(polys_all[[3]]$data$fill_value)
-# min(polys_all[[4]]$data$fill_value)
-# 
-# function(d){
-#   d[[1]]$data$fill_value
-# }
-# 
-# pal_amphibians_max <- as.numeric(max(amphibians@data$fill_value))
-# pal_amphibians_min <- as.numeric(min(amphibians@data$fill_value))
-# pal_amphibians <- colorNumeric(c("RdYlGn"), pal_amphibians_min:pal_amphibians_max)
-# 
-# for (i in 1:length(polys_all)){
-#   mn <- as.numeric(min(polys_all[[i]]$data$fill_value))
-#   mx <- as.numeric(max(polys_all[[i]]$data$fill_value))
-#   pal_df <- colorNumeric(c("RdYlGn"), mn:mx)
-#   list()
-# }
-# 
-# brew_pal <- function(d){
-#   mn <- as.numeric(min(d[[1]]$data$fill))
-#   mx <- as.numeric(max(d[[1]]$data$fill))
-#   pal_cols <- colorNumeric(c("RdYlGn"), mn:mx)
-# }
-# 
-# brew_pal(polys_amph_rept)
-
-
-# function(polys_all){
-# 
-#   for (i in 1:length(polys_all)){
-#       mn <- as.numeric(min(polys_all[[i]]$data$fill_value))
-#       mx <- as.numeric(max(polys_all[[i]]$data$fill_value))
-#       pal_df <- colorNumeric(c("RdYlGn"), mn:mx)
-#   }
-# 
-# }
-# 
-# for (i in polys_all){
-# 
-# }
-# 
-# pal_sel <- function(d){
-#   for(i in 1:length(d)){
-#     mn <- as.numeric(min(d[[i]]$data$fill_value))
-#     mx <- as.numeric(max(d[[i]]$data$fill_value))
-#     pal_df <- colorNumeric(c("RdYlGn"), mn:mx)
-#   }
-#   return(pal_df)
-# }
-# 
-# pal_selector <- function(d){
-#   pal <- colorNumeric(c("RdYlGn"), 
-#     as.numeric(min(d[[i]]$data$fill_value)):as.numeric(max(d[[i]]$data$fill_value)))
-#   return(pal)
-# }
-# 
-# pal <- colorNumeric(c("RdYlGn"), min():max())
-
-# RColorBrewer::display.brewer.pal(4, "RdYlGn")
-# 
-# ifelse(d[[1]]$data$fill_value = !is.na,  )
-# if(d[[1]]
-#   colorNumeric()
-# 
-#   
-# for (i in 1:length(d)){
-#   
-# }
-
-# colorNumeric(c("RdYlGn"), 
-#             domain = min(polys_all[[2]]$data$fill_value):max(polys_all[[2]]$data$fill_value))
-# 
-# colorNumeric(c("RdylGn"), min(polygons[[i]]$data$fill_value):max(polygons[[i]]$data$fill_value))
-
-pal_amphibians_max <- as.numeric(max(amphibians@data$fill_value))
-pal_amphibians_min <- as.numeric(min(amphibians@data$fill_value))
-pal_amphibians <- colorNumeric(c("RdYlGn"), pal_amphibians_min:pal_amphibians_max)
-
-pal_selector1 <- function(sf){
-  if(sf[[1]]$name == "flowering_plants"){
-    return(pal_flowering)
-  } else if(sf[[2]]$name == "birds"){
-    return(pal_birds)
-  } else if(sf[[3]]$name == "amphibians"){
-    return(pal_amphibians)
-  } else if(sf[[4]]$name == "reptiles"){
-    return("not available")
-  }
-}
-
-# Function needs to adapt to each polygon selection: 
-# *identify the layer that is selected* how to do this in the module?
-# find the min and max 
-# assign colors over the range for a given color palette
-
-
-
-pal_selector2 <- function(W){
-
-  palette =function(X){
-    pal_x = colorNumeric(c("RdYlGn"), min(polygons[[i]]$data$fill_value):max(polygons[[i]]$data$fill_value)) 
-    return(pal_x)
-  }
-  assign("pal_x", palette, envir = .GlobalEnv)
-  return(invisible())
-}
-
-pal_selector3 <- function(W){
-  
-  palette =function(X){
-    pal_x = colorNumeric(c("RdYlGn"), min(polygons[[i]]$data$fill_value):max(polygons[[i]]$data$fill_value)) 
-    return(pal_x)
-  }
-  return(palette)
-}
-
-
-# pal_selector2(polys_flowering_plants)
-
-# 
-# 
-# 
-# pal_selector(sf = polys_all)
-
-### ----- End Color Testing ----- ###
-
-
 
 # 3. Set ui/layout --------
 ui <- fluidPage(
-    titlePanel("Package Test Map"),
-
-    # sidebarLayout(
-    #     sidebarPanel(
-    #     ),
-
+    titlePanel("AtlasMaker Demo Map (v0.9)"),
         mainPanel(
             tabsetPanel(
                 tabPanel('Flowering Plants', map_UI('flowering_plants')),
@@ -489,33 +283,43 @@ ui <- fluidPage(
     )
 
 
+# 4. Create 1 map_server per theme/tab with as few/little 'arguments' as you need ------
 
-# 4. Create 1 map_server per theme/tab ------
+# see 'colors' section of Leaflet guide for options to pass in for colors/palettes
+# rstudio.github.io/leaflet/colors.html
+
+# pass in any base layer from the link below into 'map_base_theme'
+# http://leaflet-extras.github.io/leaflet-providers/preview/index.html
 
 server <- function(input, output) {
     map_server("flowering_plants", 
                polygons = polys_flowering_plants,
                polylines = NULL,
                points = points_flowering_plants,
-               pal = pal_flowering
+               poly_palette = 'RdPu',
+               point_color = 'brown'
                ) 
     map_server("birds", 
              polygons = polys_birds,
              polylines = lines_birds,
              points = points_birds,
-             pal = pal_birds
+             map_base_theme = 'Stamen.Watercolor',
+             poly_palette = 'YlGn',
+             point_color = '#ffa500',
+             polyline_color = "#964b00"
               ) 
     map_server("amph_rept", 
              polygons = polys_amph_rept,
              polylines = NULL,
              points = points_amp_rept,
-             pal = pal_amphibians
+             map_base_theme = 'Esri.WorldImagery',
+             poly_palette = 'Greens',
+             point_color = "black"
             ) 
     map_server("allthegoods", 
                polygons = polys_all, 
                polylines = NULL,
-               points = points_all,
-               pal = pal_flowering
+               points = points_all
               )
 }
 
