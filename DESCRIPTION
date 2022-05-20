@@ -22,3 +22,7 @@ Imports:
     readr,
     sf,
     shiny
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr

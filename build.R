@@ -1,7 +1,7 @@
 library(devtools)
 
 document()
-install()
+install(build_vignettes = TRUE)
 build()
 check()
 
@@ -11,6 +11,8 @@ usethis::use_package('sf', type = 'Imports')
 ##### Some simple tests
 library(AtlasMaker)
 ls('package:AtlasMaker')
+vignette(package = 'AtlasMaker')
+vignette('AtlasMaker')
 data(package = 'AtlasMaker')
 AtlasMaker::shiny_AtlasMaker()
 
@@ -55,4 +57,7 @@ save(points_watchsites, file = 'data/points_watchsites.rda')
 
 biodiversity <- read_csv("raw-data/Biodiversity_by_County_-_Distribution_of_Animals__Plants_and_Natural_Communities.csv")
 save(biodiversity, file = 'data/biodiversity.rda')
+
+
+tools::resaveRdaFiles('data')
 
