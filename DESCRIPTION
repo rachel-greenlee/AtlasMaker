@@ -1,0 +1,24 @@
+Package: AtlasMaker
+Title: Easily Make Multiple Leaflet Maps in a Shiny Application
+Version: 0.0.0.9000
+Authors@R: c(
+    person("Rachel", "Greenlee", '', "first.last@example.com", role = c("aut", "cre")),
+    person("Zachary", "Palmore", '', "first.last@example.com", role = c("aut")),
+    person("Jason", "Bryer", "", 'jason.bryer@cuny.edu', role = c('ctb')),
+    person("Angela", "Lui", "", "angela.lui@cuny.edu", role = c('ctb'))
+    )
+Description: What the package does (one paragraph).
+URL: https://github.com/rachel-greenlee/AtlasMaker
+BugReports: https://github.com/rachel-greenlee/AtlasMaker/issues
+License: GPL (>= 3)
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.2
+Depends: R (>= 3.5.0)
+Imports: 
+    dplyr,
+    leaflet,
+    leaflet.extras,
+    readr,
+    sf,
+    shiny

@@ -1,0 +1,6 @@
+^AtlasMaker\.Rproj$
+^\.Rproj\.user$
+^LICENSE\.md$
+raw-data/
+build.R
+archive/

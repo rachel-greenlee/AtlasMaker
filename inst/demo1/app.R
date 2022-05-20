@@ -6,72 +6,42 @@ library(shiny)
 library(readr)
 library(sf)
 
-
-
 #running the script that represents our eventual package
 # eventually this would library(something)
-source('AtlasMaker.R')
+library(AtlasMaker)
 
 # 1. Pre-processing data into dataframes------
 
 ## Points ----
 
-points_parks <- read_csv("raw-data/State_Park_Facility_Points.csv")
-#add lat/lon to a tibble for inputting to addMarkers() later
-points_parks <- tibble(
-  label = points_parks$Name,
-  long = points_parks$Longitude,
-  lat = points_parks$Latitude)
-
-points_campgrounds <- read_csv("raw-data/Campgrounds_by_County_Outside_Adirondack___Catskill_Forest_Preserve.csv")
-#add lat/lon to a tibble for inputting to addMarkers() later
-points_campgrounds <- tibble(
-  label = points_campgrounds$Name,
-  long = points_campgrounds$Longitude,
-  lat = points_campgrounds$Latitude)
-
-points_3_campgrounds <- read_csv("raw-data/Campgrounds_by_County_Within_Adirondack___Catskill_Forest_Preserve.csv")
-#add lat/lon to a tibble for inputting to addMarkers() later
-points_3_campgrounds <- tibble(
-  label = points_3_campgrounds$Campground,
-  long = points_3_campgrounds$X,
-  lat = points_3_campgrounds$Y)
-
-points_campgrounds <- bind_rows(points_campgrounds, points_3_campgrounds)
-
-points_watchsites <- read_csv("raw-data/Watchable_Wildlife_Sites.csv")
-#add lat/lon to a tibble for inputting to addMarkers() later
-points_watchsites <- tibble(
-  label = points_watchsites$`Site Name`,
-  long = points_watchsites$Longitude,
-  lat = points_watchsites$Latitude)
+data(points_campgrounds)
+data(points_parks)
+data(points_watchsites)
 
 
 ## Polylines ----
 # Load bundle saved from tigris_imports.R
 #interstate only
-load('roads_ny_interstate.rdata')
-roads_ny_interstate <- as_Spatial(roads_ny_interstate)
-
+data(roads_ny_interstate)
 
 ## Polygons-----
 # laod bundle saved from tigris_imports.R of county shapefiles and names
-load("counties_NY.rdata")
+data(counties_NY)
 
 ## Polygon fill, data prep-----
 
 # bring in biodiversity data that will be plotted via county
-biodiversity <- read_csv("raw-data/Biodiversity_by_County_-_Distribution_of_Animals__Plants_and_Natural_Communities.csv")
+data(biodiversity)
 
 ## Flowering Plant species
 # Species Abundance Selection
-flowering_plants <- biodiversity %>%  
-  group_by(County, `Taxonomic Group`) %>% 
+flowering_plants <- biodiversity %>%
+  group_by(County, `Taxonomic Group`) %>%
   filter(`Taxonomic Group` == "Flowering Plants") %>%
   summarise(n())
 # Join and convert to Spatial Polygons
 flowering_plants <- flowering_plants %>%
-  rename("NAME" = 'County', 
+  rename("NAME" = 'County',
          "fill_value" = `n()`)
 # Make Spatial DataFrames with counties_NY
 flowering_plants <- counties_NY %>%
@@ -81,13 +51,13 @@ flowering_plants <- as_Spatial(flowering_plants)
 
 ## Birds
 # Species Abundance Selection (Birds)
-birds <- biodiversity %>%  
-  group_by(County, `Taxonomic Group`) %>% 
+birds <- biodiversity %>%
+  group_by(County, `Taxonomic Group`) %>%
   filter(`Taxonomic Group` == "Birds") %>%
   summarise(n())
 # Join and convert to Spatial Polygons
 birds <- birds %>%
-  rename("NAME" = 'County', 
+  rename("NAME" = 'County',
          "fill_value" = `n()`)
 # For birds
 birds <- counties_NY %>%
@@ -97,13 +67,13 @@ birds <- as_Spatial(birds)
 
 ## Amphibians
 # Species Abundance Selection
-amphibians <- biodiversity %>%  
-  group_by(County, `Taxonomic Group`) %>% 
+amphibians <- biodiversity %>%
+  group_by(County, `Taxonomic Group`) %>%
   filter(`Taxonomic Group` == "Amphibians") %>%
   summarise(n())
 # Join and convert to Spatial Polygons
 amphibians <- amphibians %>%
-  rename("NAME" = 'County', 
+  rename("NAME" = 'County',
          "fill_value" = `n()`)
 # For amphibians
 amphibians <- counties_NY %>%
@@ -113,20 +83,18 @@ amphibians <- as_Spatial(amphibians)
 
 ## Reptiles
 # Species Abundance Selection
-reptiles <- biodiversity %>%  
-  group_by(County, `Taxonomic Group`) %>% 
+reptiles <- biodiversity %>%
+  group_by(County, `Taxonomic Group`) %>%
   filter(`Taxonomic Group` == "Reptiles") %>%
   summarise(n())
 # Join and convert to Spatial Polygons
 reptiles <- reptiles %>%
-  rename("NAME" = 'County', 
+  rename("NAME" = 'County',
          "fill_value" = `n()`)
 # For reptiles
 reptiles <- counties_NY %>%
   left_join(reptiles, by = 'NAME')
 reptiles <- as_Spatial(reptiles)
-
-
 
 
 # 2. Create lists per tab/theme-----------------
@@ -193,7 +161,7 @@ polys_amph_rept <- list(
     data = amphibians,
     label = 'name',
     fill = 'fill_value'
-  ), 
+  ),
   list(
     name = 'reptiles',
     data = reptiles,
@@ -216,7 +184,7 @@ points_amp_rept <- list(
     long = 'long',
     lat = 'lat',
     label = 'label'
-    
+
   )
 )
 
@@ -240,7 +208,7 @@ polys_all <- list(
     data = amphibians,
     label = 'name',
     fill = 'fill_value'
-  ), 
+  ),
   list(
     name = 'reptiles',
     data = reptiles,
@@ -278,7 +246,7 @@ ui <- fluidPage(
                 tabPanel('Amphibians & Reptiles', map_UI('amph_rept')),
                 tabPanel("All", map_UI("allthegoods"))
             )
-            
+
         )
     )
 
@@ -292,14 +260,14 @@ ui <- fluidPage(
 # http://leaflet-extras.github.io/leaflet-providers/preview/index.html
 
 server <- function(input, output) {
-    map_server("flowering_plants", 
+    map_server("flowering_plants",
                polygons = polys_flowering_plants,
                polylines = NULL,
                points = points_flowering_plants,
                poly_palette = 'RdPu',
                point_color = 'brown'
-               ) 
-    map_server("birds", 
+               )
+    map_server("birds",
              polygons = polys_birds,
              polylines = lines_birds,
              points = points_birds,
@@ -307,22 +275,22 @@ server <- function(input, output) {
              poly_palette = 'YlGn',
              point_color = '#ffa500',
              polyline_color = "#964b00"
-              ) 
-    map_server("amph_rept", 
+              )
+    map_server("amph_rept",
              polygons = polys_amph_rept,
              polylines = NULL,
              points = points_amp_rept,
              map_base_theme = 'Esri.WorldImagery',
              poly_palette = 'Greens',
              point_color = "black"
-            ) 
-    map_server("allthegoods", 
-               polygons = polys_all, 
+            )
+    map_server("allthegoods",
+               polygons = polys_all,
                polylines = NULL,
                points = points_all
               )
 }
 
 
-# Run the application 
+# Run the application
 shinyApp(ui = ui, server = server)
