@@ -6,7 +6,7 @@
 \alias{AtlasMaker-package}
 \title{AtlasMaker: Easily Make Multiple Leaflet Maps in a Shiny Application}
 \description{
-What the package does (one paragraph).
+Create multiple, related 'leaflet' maps across tabs on a 'shiny' application without having to copy, paste, and continually edit core code blocks that share much of the same structure across maps. You build lists of any polygons, points, and polylines needed for your project, use the map_server function to build each map tab, and the package does the rest.
 }
 \seealso{
 Useful links:
@@ -17,7 +17,7 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Rachel Greenlee \email{first.last@example.com}
+\strong{Maintainer}: Rachel Greenlee \email{rachellynn.greenlee@gmail.com}
 
 Authors:
 \itemize{

@@ -19,6 +19,26 @@ map_server(
 )
 }
 \arguments{
+\item{polygons}{polygon data in geospatial format.}
+
+\item{points}{point data in geospatial format.}
+
+\item{polylines}{polyline data in geospatial format.}
+
+\item{pal}{?? do we still use this or is it poly_palette now?}
+
+\item{center}{lat/long of where to center the default map.}
+
+\item{min_zoom}{minimum zoom level users can see, default 7.}
+
+\item{map_base_theme}{Leaflet-compatible theme for base map.}
+
+\item{poly_palette}{color palette for polygon shading.}
+
+\item{point_color}{single color for point colors.}
+
+\item{polyline_color}{single color for polyline colors.}
+
 \item{unique}{identifier for the map. This must match the id used in \code{\link[=map_UI]{map_UI()}}.}
 }
 \description{

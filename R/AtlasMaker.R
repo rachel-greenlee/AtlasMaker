@@ -16,6 +16,16 @@ map_UI <- function(id) {
 #' DESCRIBE HERE...
 #'
 #' @param  unique identifier for the map. This must match the id used in [map_UI()].
+#' @param  polygons polygon data in geospatial format.
+#' @param  points point data in geospatial format.
+#' @param  polylines polyline data in geospatial format.
+#' @param  pal ?? do we still use this or is it poly_palette now?
+#' @param  center lat/long of where to center the default map.
+#' @param  min_zoom minimum zoom level users can see, default 7.
+#' @param  map_base_theme Leaflet-compatible theme for base map.
+#' @param  poly_palette color palette for polygon shading.
+#' @param  point_color single color for point colors.
+#' @param  polyline_color single color for polyline colors.
 #'
 #' @export
 #' @import shiny
