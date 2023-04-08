@@ -76,7 +76,7 @@ NA
 #' @name roads_ny_interstate
 NA
 
-#' biodiversity
+#' amphibians
 #'
 #' Say more
 #'
@@ -88,8 +88,54 @@ NA
 #' }
 #' @source \url{}
 #' @docType data
-#' @name biodiversity
+#' @name amphibians
 NA
+
+#' reptiles
+#'
+#' Say more
+#'
+#' @format A data frame with X rows and Y variables:
+#' \describe{
+#'   \item{price}{price, in US dollars}
+#'   \item{carat}{weight of the diamond, in carats}
+#'   ...
+#' }
+#' @source \url{}
+#' @docType data
+#' @name reptiles
+NA
+
+#' flowering_plants
+#'
+#' Say more
+#'
+#' @format A data frame with X rows and Y variables:
+#' \describe{
+#'   \item{price}{price, in US dollars}
+#'   \item{carat}{weight of the diamond, in carats}
+#'   ...
+#' }
+#' @source \url{}
+#' @docType data
+#' @name flowering_plants
+NA
+
+#' birds
+#'
+#' Say more
+#'
+#' @format A data frame with X rows and Y variables:
+#' \describe{
+#'   \item{price}{price, in US dollars}
+#'   \item{carat}{weight of the diamond, in carats}
+#'   ...
+#' }
+#' @source \url{}
+#' @docType data
+#' @name birds
+NA
+
 
 ## usethis namespace: start
 ## usethis namespace: end

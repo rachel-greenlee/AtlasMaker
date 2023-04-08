@@ -12,35 +12,30 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
+
 ```
 
 ```{r setup}
 library(AtlasMaker)
 library(shiny)
-library(leaflet)
 ```
 
-Provided datasets for this vingette include:
+Provided datasets for this vignette include:
 
-biodiversity                                
 counties_NY                                 
 points_campgrounds                          
 points_parks                                
 points_watchsites                           
-roads_ny_interstate       
-
-# load data
+roads_ny_interstate  
 
 ```{r}
-data(biodiversity, package = "AtlasMaker")
-data(counties_NY, package = "AtlasMaker")
-data(points_campgrounds, package = "AtlasMaker")
-data(points_parks, package = "AtlasMaker")
-data(points_watchsites, package = "AtlasMaker")
-data(roads_ny_interstate, package = "AtlasMaker")
+load("~/ds_projects/AtlasMaker/data/vignette_data_prepped.rdata")
 ```
 
-# make lists
+
+# Creating Lists for Map Tab Creation
+
+## Tab 1, Flowering Plants
 
 ```{r}
 ## for tab 1: flowering plants-------------
@@ -62,6 +57,18 @@ points_flowering_plants <- list(
         label = 'label'
     )
 )
+
+```
+
+
+
+## Tabs 2-4
+
+
+
+```{r}
+# 2. Create lists per tab/theme-----------------
+
 
 ## for tab 2-------------
 polys_birds <- list(
@@ -178,10 +185,14 @@ points_all <- list(
     label = 'label'
   )
 )
+
+
 ```
 
 
-# creat shiny app
+# Plug into Shiny UI/Server
+
+## Set Standard Shiny UI
 
 ```{r}
 # 3. Set ui/layout --------
@@ -197,16 +208,22 @@ ui <- fluidPage(
 
         )
     )
+```
 
 
-# 4. Create 1 map_server per theme/tab with as few/little 'arguments' as you need ------
+## Set Standard Shiny Server, with AtlasMaker::map_server
 
-# see 'colors' section of Leaflet guide for options to pass in for colors/palettes
-# rstudio.github.io/leaflet/colors.html
+Create 1 map_server per theme/tab with as few/little 'arguments' as you need ------
 
-# pass in any base layer from the link below into 'map_base_theme'
-# http://leaflet-extras.github.io/leaflet-providers/preview/index.html
+see 'colors' section of Leaflet guide for options to pass in for colors/palettes
+rstudio.github.io/leaflet/colors.html
 
+pass in any base layer from the link below into 'map_base_theme'
+http://leaflet-extras.github.io/leaflet-providers/preview/index.html
+
+
+
+```{r}
 server <- function(input, output) {
     map_server("flowering_plants",
                polygons = polys_flowering_plants,
@@ -238,9 +255,18 @@ server <- function(input, output) {
                points = points_all
               )
 }
-
-shinyApp(ui = ui, server = server)
-
 ```
+
+# Run the App
+
+```{r}
+# Run the application
+shinyApp(ui = ui, server = server)
+```
+
+
+
+
+
 
 
