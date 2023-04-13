@@ -5,3 +5,4 @@ raw-data/
 build.R
 archive/
 inst/slides
+^cran-comments\.md$

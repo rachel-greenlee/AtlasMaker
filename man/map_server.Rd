@@ -7,6 +7,7 @@
 map_server(
   id,
   polygons = NULL,
+  polygon_legend_title = NULL,
   points = NULL,
   polylines = NULL,
   pal = NULL,
@@ -21,11 +22,13 @@ map_server(
 \arguments{
 \item{polygons}{polygon data in geospatial format.}
 
-\item{points}{point data in geospatial format.}
+\item{polygon_legend_title}{title to display on legend for polygon shading}
+
+\item{points}{point data with label, lat, and long variables.}
 
 \item{polylines}{polyline data in geospatial format.}
 
-\item{pal}{?? do we still use this or is it poly_palette now?}
+\item{pal}{??????? do we still use this or is it poly_palette now???????????????}
 
 \item{center}{lat/long of where to center the default map.}
 
@@ -33,11 +36,11 @@ map_server(
 
 \item{map_base_theme}{Leaflet-compatible theme for base map.}
 
-\item{poly_palette}{color palette for polygon shading.}
+\item{poly_palette}{Leaflet-compatible color palette for polygon shading.}
 
-\item{point_color}{single color for point colors.}
+\item{point_color}{Leaflet-compatible single color for point colors.}
 
-\item{polyline_color}{single color for polyline colors.}
+\item{polyline_color}{Leaflet-compatible single color for polyline colors.}
 
 \item{unique}{identifier for the map. This must match the id used in \code{\link[=map_UI]{map_UI()}}.}
 }

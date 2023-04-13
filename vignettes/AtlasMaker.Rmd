@@ -24,12 +24,10 @@ library(AtlasMaker)
 library(shiny)
 ```
 
-HOW TO DO LOAD CALL SO IT ISN"T MY PC?
-
 
 
 ```{r}
-load("~/ds_projects/AtlasMaker/data/vignette_data_prepped.rdata")
+data(vignette_data_prepped)
 ```
 
 Provided datasets for this vignette come from https://data.ny.gov/, with the exception of counties_NY which was accessed through the `tigris` package and then combines with the biodiversity data. Preprocssed datasets include:
@@ -274,6 +272,7 @@ Set a Leaflet supported poly_palette, point_color, polyline_color, and map_base_
 server <- function(input, output) {
     map_server("flowering_plants",
                polygons = polys_flowering_plants,
+    		   polygons_legend_title = "Biodiversity Count",
                polylines = NULL,
                points = points_flowering_plants,
                poly_palette = 'RdPu',

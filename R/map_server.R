@@ -1,8 +1,8 @@
 #' The user interface for AtlasMaker.
 #'
-#' Describe here...
+#' This is the core function for AtlasMaker where users pass in the spatial-data
+#' based lists and aesthetic choices for each map tab.
 #'
-#' @param id unique identifier for the map. This must match the id used in [map_server()].
 #' @return a [leaflet::leafletOutput()] object.
 #' @export
 #' @importFrom leaflet leafletOutput
@@ -11,27 +11,31 @@ map_UI <- function(id) {
   leaflet::leafletOutput(ns("mymap"), height = 700)
 }
 
+#' @param  id identifier for the map. This must match the id used in [map_server()].
+
 #' The Shiny server module for AtlasMaker.
 #'
 #' DESCRIBE HERE...
 #'
-#' @param  unique identifier for the map. This must match the id used in [map_UI()].
+#' @param  id identifier for the map. This must match the id used in [map_UI()].
 #' @param  polygons polygon data in geospatial format.
-#' @param  points point data in geospatial format.
+#' @param  polygon_legend_title title to display on legend for polygon shading
+#' @param  points point data with label, lat, and long variables.
 #' @param  polylines polyline data in geospatial format.
-#' @param  pal ?? do we still use this or is it poly_palette now?
+#' @param  pal ??????? do we still use this or is it poly_palette now???????????????
 #' @param  center lat/long of where to center the default map.
 #' @param  min_zoom minimum zoom level users can see, default 7.
 #' @param  map_base_theme Leaflet-compatible theme for base map.
-#' @param  poly_palette color palette for polygon shading.
-#' @param  point_color single color for point colors.
-#' @param  polyline_color single color for polyline colors.
+#' @param  poly_palette Leaflet-compatible color palette for polygon shading.
+#' @param  point_color Leaflet-compatible single color for point colors.
+#' @param  polyline_color Leaflet-compatible single color for polyline colors.
 #'
 #' @export
 #' @import shiny
 #' @import leaflet
 map_server <- function(id,
                        polygons = NULL,
+					   polygon_legend_title = NULL,
                        points = NULL,
                        polylines = NULL,
                        pal = NULL,
@@ -88,7 +92,8 @@ map_server <- function(id,
 
             # add legend (this won't trigger if there are no polygons in the module)
             addLegend(position = "bottomright",
-                      pal = pal_x, values = polygons[[i]]$data$fill_value)
+                      pal = pal_x, values = polygons[[i]]$data$fill_value,
+            		  title = polygon_legend_title)
         }
       }
 

@@ -6,12 +6,10 @@
 \usage{
 map_UI(id)
 }
-\arguments{
-\item{id}{unique identifier for the map. This must match the id used in \code{\link[=map_server]{map_server()}}.}
-}
 \value{
 a \code{\link[leaflet:map-shiny]{leaflet::leafletOutput()}} object.
 }
 \description{
-Describe here...
+This is the core function for AtlasMaker where users pass in the spatial-data
+based lists and aesthetic choices for each map tab.
 }
