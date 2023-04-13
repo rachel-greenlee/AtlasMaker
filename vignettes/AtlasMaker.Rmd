@@ -3,8 +3,9 @@ title: "Getting Started with AtlasMaker"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{AtlasMaker}
-  %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+runtime: shiny
 ---
 
 ```{r, include = FALSE}
@@ -15,30 +16,68 @@ knitr::opts_chunk$set(
 
 ```
 
+
+This vignette will walk through creating a 4 tab Leaflet-based Shiny App of New York state biodiversity for an outdoor enthusiast. Point, polyline, and polygon data should be in a Leaflet-compatible format prior to proceeding with the following steps for your own project.
+
 ```{r setup}
 library(AtlasMaker)
 library(shiny)
 ```
 
-Provided datasets for this vignette include:
+HOW TO DO LOAD CALL SO IT ISN"T MY PC?
 
-counties_NY                                 
-points_campgrounds                          
-points_parks                                
-points_watchsites                           
-roads_ny_interstate  
+
 
 ```{r}
 load("~/ds_projects/AtlasMaker/data/vignette_data_prepped.rdata")
 ```
 
+Provided datasets for this vignette come from https://data.ny.gov/, with the exception of counties_NY which was accessed through the `tigris` package and then combines with the biodiversity data. Preprocssed datasets include:
+
+Polygons:  
+counties_NY (via tigris package)
+
+amphibians  
+birds  
+flowering_plants  
+reptiles
+
+Points:    
+points_campgrounds                          
+points_parks                                
+points_watchsites
+
+Polylines:   
+roads_ny_interstate  
+
+
+Taking a look at a few of the datasets:
+
+```{r}
+class(birds)
+```
+
+```{r}
+head(points_campgrounds)
+```
+
+```{r}
+class(roads_ny_interstate)
+```
+
+
 
 # Creating Lists for Map Tab Creation
 
-## Tab 1, Flowering Plants
+First, we create one list per type of spatial data for each tab we need in the final AtlasMaker Shiny App. We'll make four for this vignette: Flowering Plants, Birds, Amphibians & Reptiles, and All.
+
+
+## Tab 1 - Flowering Plants
+
+For our first Flowering Plants tab, we create one list for the needed polygons and provide the name to be referenced, the datafile which is already in a spatial dataframe format, and then provide which variable should be used for the label ('name') and which variable should be used for the polygon fill ('fill_value'). In this example, the fill_value is the biodiversity of flowering plants in the given New York state county.
 
 ```{r}
-## for tab 1: flowering plants-------------
+## polygons list for tab 1: flowering plants-------------
 polys_flowering_plants <- list(
     list(
         name = 'flowering_plants',
@@ -47,7 +86,12 @@ polys_flowering_plants <- list(
         fill = 'fill_value'
     )
 )
+```
 
+With just the list above, the Flowering Plant tab would display New York state with shaded counties based on the biodiversity fill_value. Let's add some points to the map as well. With the list below, we name and choose the spatial dataframe with point data of where parks are in New York. Next, we map which variables in the spatial dataframe correspond with the long, lat, and label.
+
+```{r}
+## points list for tab 1: flowering plants-------------
 points_flowering_plants <- list(
     list(
         name = 'points_parks',
@@ -57,20 +101,15 @@ points_flowering_plants <- list(
         label = 'label'
     )
 )
-
 ```
 
 
+## Tab 2 - Birds
 
-## Tabs 2-4
-
-
+Our next tab for Birds is quite similar, but we add a polylines list to show where New York interstates run with the `lines_birds` list. We also need two sets of points to display both campgrounds and wildlife watchsites, and these are nested into the larger `points_birds` list.
 
 ```{r}
-# 2. Create lists per tab/theme-----------------
-
-
-## for tab 2-------------
+## polygon list for tab 2: birds-------------
 polys_birds <- list(
   list(
     name = 'birds',
@@ -80,6 +119,7 @@ polys_birds <- list(
   )
 )
 
+## polyline list for tab 2: birds-------------
 lines_birds <- list(
   list(
     name = 'ny_interstates',
@@ -87,6 +127,7 @@ lines_birds <- list(
   )
 )
 
+## points list for tab 2: birds-------------
 points_birds <- list(
   list(
     name = 'points_watchsites',
@@ -103,9 +144,15 @@ points_birds <- list(
     label = 'label'
   )
 )
+```
 
-## for tab 3-------------
 
+## Tab 3 & 4
+
+For Tab 3 we decide to show both our amphibian and reptiles data, so `polys_amp_rep` is a nested list. Tab 4 will display all the biodiversity data, so has an even larger nested list for it's polygon list.
+
+```{r}
+## polygon list for tab 3: amph & rept -------------
 polys_amph_rept <- list(
   list(
     name = 'amphibians',
@@ -121,6 +168,7 @@ polys_amph_rept <- list(
   )
 )
 
+## point list for tab 3: amph & rept-------------
 points_amp_rept <- list(
   list(
     name = 'points_parks',
@@ -140,7 +188,7 @@ points_amp_rept <- list(
 )
 
 ## for tab 4-------------
-# All Polygons
+## polygons list for tab 4: all-------------
 polys_all <- list(
   list(
     name = 'flowering_plants',
@@ -168,7 +216,7 @@ polys_all <- list(
   )
 )
 
-# All Points
+## points list for tab 4: all-------------
 points_all <- list(
   list(
     name = 'points_parks',
@@ -194,6 +242,8 @@ points_all <- list(
 
 ## Set Standard Shiny UI
 
+As usual, we set up a basic `ui` for the app. For each `tabPanel()` the title to display goes in quotes first, followed by the function `map_UI()` with an id you create for each map. 
+
 ```{r}
 # 3. Set ui/layout --------
 ui <- fluidPage(
@@ -213,14 +263,11 @@ ui <- fluidPage(
 
 ## Set Standard Shiny Server, with AtlasMaker::map_server
 
-Create 1 map_server per theme/tab with as few/little 'arguments' as you need ------
+The `server` is where AtlasMaker uses the `map_server()` function to quickly fill in the lists we've created above.  
 
-see 'colors' section of Leaflet guide for options to pass in for colors/palettes
-rstudio.github.io/leaflet/colors.html
+Using one map_server call per tab and starting with the 'flowering_plants', we start with the id created in the UI, followed by setting the polygons and points arguments to the lists we created above.   
 
-pass in any base layer from the link below into 'map_base_theme'
-http://leaflet-extras.github.io/leaflet-providers/preview/index.html
-
+Set a Leaflet supported poly_palette, point_color, polyline_color, and map_base_theme if desired.
 
 
 ```{r}
@@ -257,7 +304,17 @@ server <- function(input, output) {
 }
 ```
 
+*See the 'colors' section of Leaflet guide for options to pass in for colors/palettes: http://rstudio.github.io/leaflet/colors.html*  
+
+*Pass in any base layer from the link into 'map_base_theme': http://leaflet-extras.github.io/leaflet-providers/preview/index.html*
+
+
+
 # Run the App
+
+**Please note:** knitting this Markdown file will only display a static image of the app, run the following code chunk in your R session to see the fully interactive demo app.
+
+The demo app is admittedly a little messy style wise, but with the purpose to show how easily the aesthetics of the maps can be changed using the `map_server()` arguments.
 
 ```{r}
 # Run the application
