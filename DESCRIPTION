@@ -3,7 +3,7 @@ Title: Easily Make Multiple Leaflet Maps in a Shiny Application
 Version: 0.0.0.9000
 Authors@R: c(
     person("Rachel", "Greenlee", , "rachellynn.greenlee@gmail.com", role = c("aut", "cre")),
-    person("Zachary", "Palmore", , "first.last@example.com", role = "aut"),
+    person("Zachary", "Palmore", , "zacharypalmore@gmail.com", role = "aut"),
     person("Jason", "Bryer", , "jason.bryer@cuny.edu", role = "ctb"),
     person("Angela", "Lui", , "angela.lui@cuny.edu", role = "ctb")
   )

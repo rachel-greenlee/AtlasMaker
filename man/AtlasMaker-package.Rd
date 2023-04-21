@@ -21,7 +21,7 @@ Useful links:
 
 Authors:
 \itemize{
-  \item Zachary Palmore \email{first.last@example.com}
+  \item Zachary Palmore \email{zacharypalmore@gmail.com}
 }
 
 Other contributors:
