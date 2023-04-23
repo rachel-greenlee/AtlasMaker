@@ -22,7 +22,6 @@ map_UI <- function(id) {
 #' @param  polygon_legend_title title to display on legend for polygon shading
 #' @param  points point data with label, lat, and long variables.
 #' @param  polylines polyline data in geospatial format.
-#' @param  pal ??????? do we still use this or is it poly_palette now???????????????
 #' @param  center lat/long of where to center the default map.
 #' @param  min_zoom minimum zoom level users can see, default 7.
 #' @param  map_base_theme Leaflet-compatible theme for base map.
