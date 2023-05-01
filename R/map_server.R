@@ -1,21 +1,24 @@
 #' The user interface for AtlasMaker.
 #'
-#' This is the core function for AtlasMaker where users pass in the spatial-data
+#' This is the core ui and server function for AtlasMaker where users pass in the spatial-data
 #' based lists and aesthetic choices for each map tab.
 #'
-#' @return a [leaflet::leafletOutput()] object.
 #' @export
 #' @importFrom leaflet leafletOutput
+#'
+#' @param  id identifier for the map. This must match the id used in [map_server()].
+#'
+#' @return a [leaflet::leafletOutput()] object.
+
 map_UI <- function(id) {
   ns <- NS(id)
   leaflet::leafletOutput(ns("mymap"), height = 700)
 }
 
-#' @param  id identifier for the map. This must match the id used in [map_server()].
-
 #' The Shiny server module for AtlasMaker.
 #'
-#' DESCRIBE HERE...
+#' This is the core ui and server function for AtlasMaker where users pass in the spatial-data
+#' based lists and aesthetic choices for each map tab.
 #'
 #' @param  id identifier for the map. This must match the id used in [map_UI()].
 #' @param  polygons polygon data in geospatial format.
@@ -37,7 +40,6 @@ map_server <- function(id,
 					   polygon_legend_title = NULL,
                        points = NULL,
                        polylines = NULL,
-                       pal = NULL,
                        center = NULL,
                        min_zoom = 7,
                        map_base_theme = 'Stamen.Terrain',
@@ -45,7 +47,6 @@ map_server <- function(id,
                        point_color = 'black',
                        polyline_color = 'gray') {
   moduleServer(id, function(input, output, session){
-
 
     ####base Leaflet map construction-------------
     output$mymap <- renderLeaflet({
@@ -56,7 +57,7 @@ map_server <- function(id,
 
       #zoom and centering
       if(!is.null(center)) {
-        map <- map %>% setView(lng = center[1], lat = center[2], zoom = zoom)
+        map <- map %>% leaflet::setView(lng = center[1], lat = center[2], zoom = zoom)
       }
 
 
@@ -73,7 +74,8 @@ map_server <- function(id,
           output <- polygons[[i]]$name
           polygon_names[[i]] <- output}
 
-        # add one set of polygons with fill data per number of polygon lists passed through to this module
+        # add one set of polygons with fill data per number of
+      	# polygon lists passed through to this module
         for(i in 1:length(polygons)) {
           #fantastic way to get reactive color palette per polygon group
           mn <- as.numeric(min(polygons[[i]]$data$fill_value))
@@ -108,7 +110,8 @@ map_server <- function(id,
           output <- points[[i]]$name
           point_names[[i]] <- output}
 
-        # add one set of points per number of points lists passed through to this module
+        # add one set of points per number of
+      	# points lists passed through to this module
         for(i in 1:length(points)) {
           map <- map %>% addCircleMarkers(data = points[[i]]$data,
                                           lng = points[[i]]$data$long,

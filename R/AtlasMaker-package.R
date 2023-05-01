@@ -19,6 +19,22 @@
 #' @name points_campgrounds
 NA
 
+#' points
+#'
+#' Takes user defined data for points in demo1
+#' Default is NULL or empty
+#'
+#' @format A function with arguments x, ...:
+#' \describe{
+#'   \item{x}{user data}
+#'   ...
+#' }
+#' @source \url{none}
+#' @docType data
+#' @name points
+NA
+
+
 #' points_parks
 #'
 #' Data on state parks in New  York. For this package demo only three columns were retained.
@@ -181,3 +197,4 @@ NA
 ## usethis namespace: start
 ## usethis namespace: end
 NULL
+

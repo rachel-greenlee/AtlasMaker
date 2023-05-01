@@ -1,5 +1,7 @@
 #' Run a the AtlasMaker Shiny Demo
 #'
+#' @param app defaults to demo1
+#'
 #' @export
 #' @importFrom shiny runApp
 shiny_AtlasMaker <- function(
