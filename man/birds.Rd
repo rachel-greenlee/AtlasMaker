@@ -19,7 +19,7 @@ A spatial data frame with 62 county entries:
 }
 }
 \source{
-\urlhttps://data.ny.gov/Energy-Environment/Biodiversity-by-County-Distribution-of-Animals-Pla/tk82-7km5{}
+\url{https://data.ny.gov/Energy-Environment/Biodiversity-by-County-Distribution-of-Animals-Pla/tk82-7km5}
 }
 \description{
 Derived from data.ny.gov biodiversity data by county, filtered for birds only.

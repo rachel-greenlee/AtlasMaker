@@ -57,7 +57,9 @@ map_server <- function(id,
 
       #zoom and centering
       if(!is.null(center)) {
-        map <- map %>% leaflet::setView(lng = center[1], lat = center[2], zoom = zoom)
+        map <- map %>% leaflet::setView(lng = center[1],
+        								lat = center[2],
+        								min_zoom = min_zoom)
       }
 
 
@@ -86,8 +88,9 @@ map_server <- function(id,
                                      weight = 1,
                                      fillOpacity = 0.7,
                                      color = ~pal_x(polygons[[i]]$data$fill_value),
-                                     label = ~paste(polygons[[i]]$data$NAME, polygons[[i]]$data$fill_value),
-                                     highlight = highlightOptions(weight = 1,
+                                     label = ~paste(polygons[[i]]$data$NAME,
+                                     			   polygons[[i]]$data$fill_value),
+                                     highlightOptions = highlightOptions(weight = 1,
                                                                   color = "black"),
                                      group = polygon_names[[i]]) %>%
 

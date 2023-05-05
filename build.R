@@ -5,7 +5,8 @@ install(build_vignettes = TRUE)
 build()
 check()
 
-usethis::use_package('sf', type = 'Imports')
+# usethis::use_package('sf', type = 'Imports')
+# usethis::use_package('sp', type = 'Imports')
 # usethis::use_package('leaflet', type = 'Suggests')
 
 ##### Some simple tests
@@ -18,5 +19,5 @@ AtlasMaker::shiny_AtlasMaker()
 
 
 
-tools::resaveRdaFiles('data')
+# tools::resaveRdaFiles('data')
 

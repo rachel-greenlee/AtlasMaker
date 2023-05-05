@@ -100,7 +100,7 @@ NA
 #'   \item{geometry}{polyline information}
 #'   ...
 #' }
-#' @source \url{}
+#' @source \url{none}
 #' @docType data
 #' @name roads_ny_interstate
 NA
@@ -188,7 +188,7 @@ NA
 #'   \item{fill_value}{count of species from birds taxonomic group, by county  ????????ZACH HOW DID YOU DO THIS?}
 #'   ...
 #' }
-#' @source \urlhttps://data.ny.gov/Energy-Environment/Biodiversity-by-County-Distribution-of-Animals-Pla/tk82-7km5{}
+#' @source \url{https://data.ny.gov/Energy-Environment/Biodiversity-by-County-Distribution-of-Animals-Pla/tk82-7km5}
 #' @docType data
 #' @name birds
 NA
