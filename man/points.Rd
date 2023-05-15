@@ -11,9 +11,6 @@ A function with arguments x, ...:
 ...
 }
 }
-\source{
-\url{none}
-}
 \description{
 Takes user defined data for points in demo1
 Default is NULL or empty

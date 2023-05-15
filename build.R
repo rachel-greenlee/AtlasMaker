@@ -17,7 +17,5 @@ vignette('AtlasMaker')
 data(package = 'AtlasMaker')
 AtlasMaker::shiny_AtlasMaker()
 
-
-
 # tools::resaveRdaFiles('data')
 

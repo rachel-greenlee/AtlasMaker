@@ -152,10 +152,11 @@ map_server <- function(id,
       ####interactivity-------------
       # references the above group = calls in the above 3 sections,
       # polygons are toggle buttons and polylines/points are checkboxes
-      map <- map %>% addLayersControl(baseGroups = polygon_names,
-                                      overlayGroups = c(point_names, polyline_names),
-                                      options = layersControlOptions(collapsed = F),
-                                      data = getMapData(map))
+      map <- map %>%
+      	addLayersControl(baseGroups = polygon_names,
+      					 overlayGroups = c(point_names, polyline_names),
+      					 options = layersControlOptions(collapsed = F),
+      					 data = getMapData(map))
 
       return(map)
 

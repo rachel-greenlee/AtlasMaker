@@ -14,7 +14,7 @@ A spatial data frame with 62 county entries:
 \item{ALAND}{area of land, in square meters}
 \item{AWATER}{area of water, in square meters}
 \item{Taxonomic.Group}{For animals and plants, the taxonomic phylum, class, or order to which the species belongs.}
-\item{fill_value}{count of species from reptiles taxonomic group, by county  ????????ZACH HOW DID YOU DO THIS?}
+\item{fill_value}{count of species from reptiles taxonomic group by county}
 ...
 }
 }

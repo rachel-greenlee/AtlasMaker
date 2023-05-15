@@ -29,7 +29,6 @@ NA
 #'   \item{x}{user data}
 #'   ...
 #' }
-#' @source \url{none}
 #' @docType data
 #' @name points
 NA
@@ -100,7 +99,6 @@ NA
 #'   \item{geometry}{polyline information}
 #'   ...
 #' }
-#' @source \url{none}
 #' @docType data
 #' @name roads_ny_interstate
 NA
@@ -119,7 +117,7 @@ NA
 #'   \item{ALAND}{area of land, in square meters}
 #'   \item{AWATER}{area of water, in square meters}
 #'   \item{Taxonomic.Group}{For animals and plants, the taxonomic phylum, class, or order to which the species belongs.}
-#'   \item{fill_value}{count of species from amphibians taxonomic group, by county  ????????ZACH HOW DID YOU DO THIS?}
+#'   \item{fill_value}{count of species from amphibians taxonomic grouped by county}
 #'   ...
 #' }
 #' @source \url{https://data.ny.gov/Energy-Environment/Biodiversity-by-County-Distribution-of-Animals-Pla/tk82-7km5}
@@ -141,7 +139,7 @@ NA
 #'   \item{ALAND}{area of land, in square meters}
 #'   \item{AWATER}{area of water, in square meters}
 #'   \item{Taxonomic.Group}{For animals and plants, the taxonomic phylum, class, or order to which the species belongs.}
-#'   \item{fill_value}{count of species from reptiles taxonomic group, by county  ????????ZACH HOW DID YOU DO THIS?}
+#'   \item{fill_value}{count of species from reptiles taxonomic group by county}
 #'   ...
 #' }
 #' @source \url{https://data.ny.gov/Energy-Environment/Biodiversity-by-County-Distribution-of-Animals-Pla/tk82-7km5}
@@ -163,7 +161,7 @@ NA
 #'   \item{ALAND}{area of land, in square meters}
 #'   \item{AWATER}{area of water, in square meters}
 #'   \item{Taxonomic.Group}{For animals and plants, the taxonomic phylum, class, or order to which the species belongs.}
-#'   \item{fill_value}{count of species from flowering plants taxonomic group, by county  ????????ZACH HOW DID YOU DO THIS?}
+#'   \item{fill_value}{count of species from flowering plants taxonomic group by county}
 #'   ...
 #' }
 #' @source \url{https://data.ny.gov/Energy-Environment/Biodiversity-by-County-Distribution-of-Animals-Pla/tk82-7km5}
@@ -185,7 +183,7 @@ NA
 #'   \item{ALAND}{area of land, in square meters}
 #'   \item{AWATER}{area of water, in square meters}
 #'   \item{Taxonomic.Group}{For animals and plants, the taxonomic phylum, class, or order to which the species belongs.}
-#'   \item{fill_value}{count of species from birds taxonomic group, by county  ????????ZACH HOW DID YOU DO THIS?}
+#'   \item{fill_value}{count of species from birds taxonomic group by county}
 #'   ...
 #' }
 #' @source \url{https://data.ny.gov/Energy-Environment/Biodiversity-by-County-Distribution-of-Animals-Pla/tk82-7km5}

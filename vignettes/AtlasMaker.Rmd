@@ -26,7 +26,7 @@ library(shiny)
 
 
 ```{r}
-data(vignette_data_prepped)
+data(atlas_data)
 ```
 
 Provided datasets for this vignette come from https://data.ny.gov/, with the exception of counties_NY which was accessed through the `tigris` package and then combines with the biodiversity data. Preprocssed datasets include:
