@@ -16,3 +16,9 @@ a \code{\link[leaflet:map-shiny]{leaflet::leafletOutput()}} object.
 This is the core ui and server function for AtlasMaker where users pass in the spatial-data
 based lists and aesthetic choices for each map tab.
 }
+\examples{
+map_UI('flowering_plants')
+map_UI('map1')
+map_UI('map2')
+
+}

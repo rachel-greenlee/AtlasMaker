@@ -16,7 +16,7 @@ knitr::opts_chunk$set(
 ```
 
 
-This vignette will walk through creating a 4 tab Leaflet-based Shiny App of New York state biodiversity for an outdoor enthusiast. Point, polyline, and polygon data should be in a Leaflet-compatible format prior to proceeding with the following steps for your own project.
+This vignette will walk through creating a 4 tab leaflet-based Shiny App of New York state biodiversity for an outdoor enthusiast. Point, polyline, and polygon data should be in a leaflet-compatible format prior to proceeding with the following steps for your own project.
 
 ```{r setup}
 library(AtlasMaker)
@@ -239,7 +239,7 @@ points_all <- list(
 
 ## Set Standard Shiny UI
 
-As usual, we set up a basic `ui` for the app. For each `tabPanel()` the title to display goes in quotes first, followed by the function `map_UI()` with an id you create for each map. 
+As usual with Shiny, we set up a basic `ui` for the app. For each `tabPanel()` the title to display goes in quotes first, followed by the function `map_UI()` with an id you create for each map. 
 
 ```{r}
 # 3. Set ui/layout --------
@@ -264,7 +264,7 @@ The `server` is where AtlasMaker uses the `map_server()` function to quickly fil
 
 Using one map_server call per tab and starting with the 'flowering_plants', we start with the id created in the UI, followed by setting the polygons and points arguments to the lists we created above.   
 
-Set a Leaflet supported poly_palette, point_color, polyline_color, and map_base_theme if desired.
+Set a leaflet supported poly_palette, point_color, polyline_color, and map_base_theme if desired.
 
 
 ```{r}

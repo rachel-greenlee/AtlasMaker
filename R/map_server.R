@@ -9,11 +9,17 @@
 #' @param  id identifier for the map. This must match the id used in [map_server()].
 #'
 #' @return a [leaflet::leafletOutput()] object.
+#' @examples
+#' map_UI('flowering_plants')
+#' map_UI('map1')
+#' map_UI('map2')
+#'
 
 map_UI <- function(id) {
   ns <- NS(id)
   leaflet::leafletOutput(ns("mymap"), height = 700)
 }
+
 
 #' The Shiny server module for AtlasMaker.
 #'
@@ -35,6 +41,26 @@ map_UI <- function(id) {
 #' @export
 #' @import shiny
 #' @import leaflet
+#'
+#' @examples
+#' map_server(map1,
+#'             polygons = counties,
+#'             polygon_legend_title = "County",
+#'             points = schools,
+#'             poly_palette = 'Greens',
+#'             point_color = 'purple')
+#'
+#'map_server(map2,
+#'             polygons = watersheds,
+#'             polygon_legend_title = "Watershed",
+#'             points = farms,
+#'             polylines = rivers,
+#'             point_color = 'red',
+#'             polyline_color = 'black')
+#'
+#'
+#'
+#'
 map_server <- function(id,
                        polygons = NULL,
 					   polygon_legend_title = NULL,
