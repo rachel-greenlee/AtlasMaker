@@ -21,6 +21,7 @@
 #'
 #' @returns a list of parameters, including spatial data, that are passed into the AtlasMaker module that builds a single map tab.
 #' @examples
+#' server <- function(input, output) {
 #' map_server(id = map2,
 #'             polygons = watersheds,
 #'             polygon_legend_title = "Watershed",
@@ -28,6 +29,7 @@
 #'             polylines = rivers,
 #'             point_color = 'red',
 #'             polyline_color = 'black')
+#'             }
 #'
 #'
 #'

@@ -41,12 +41,15 @@ map_server(
 
 \item{polyline_color}{Leaflet-compatible single color for polyline colors.}
 }
+\value{
+a list of parameters, including spatial data, that are passed into the AtlasMaker module that builds a single map tab.
+}
 \description{
 This is the core ui and server function for AtlasMaker where users pass in the spatial-data
 based lists and aesthetic choices for each map tab.
 }
 \examples{
-/dontrun{
+server <- function(input, output) {
 map_server(id = map2,
             polygons = watersheds,
             polygon_legend_title = "Watershed",
