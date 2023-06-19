@@ -1,26 +1,3 @@
-#' The user interface for AtlasMaker.
-#'
-#' This is the core ui and server function for AtlasMaker where users pass in the spatial-data
-#' based lists and aesthetic choices for each map tab.
-#'
-#' @export
-#' @importFrom leaflet leafletOutput
-#'
-#' @param  id identifier for the map. This must match the id used in [map_server()].
-#'
-#' @return a [leaflet::leafletOutput()] object.
-#' @examples
-#' map_UI('flowering_plants')
-#' map_UI('map1')
-#' map_UI('map2')
-#'
-
-map_UI <- function(id) {
-  ns <- NS(id)
-  leaflet::leafletOutput(ns("mymap"), height = 700)
-}
-
-
 #' The Shiny server module for AtlasMaker.
 #'
 #' This is the core ui and server function for AtlasMaker where users pass in the spatial-data
@@ -42,15 +19,9 @@ map_UI <- function(id) {
 #' @import shiny
 #' @import leaflet
 #'
+#' @returns a list of parameters, including spatial data, that are passed into the AtlasMaker module that builds a single map tab.
 #' @examples
-#' map_server(map1,
-#'             polygons = counties,
-#'             polygon_legend_title = "County",
-#'             points = schools,
-#'             poly_palette = 'Greens',
-#'             point_color = 'purple')
-#'
-#'map_server(map2,
+#' map_server(id = map2,
 #'             polygons = watersheds,
 #'             polygon_legend_title = "Watershed",
 #'             points = farms,

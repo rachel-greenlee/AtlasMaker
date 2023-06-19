@@ -46,20 +46,15 @@ This is the core ui and server function for AtlasMaker where users pass in the s
 based lists and aesthetic choices for each map tab.
 }
 \examples{
-map_server(map1,
-            polygons = counties,
-            polygon_legend_title = "County",
-            points = schools,
-            poly_palette = 'Greens',
-            point_color = 'purple')
-
-map_server(map2,
+/dontrun{
+map_server(id = map2,
             polygons = watersheds,
             polygon_legend_title = "Watershed",
             points = farms,
             polylines = rivers,
             point_color = 'red',
             polyline_color = 'black')
+            }
 
 
 
