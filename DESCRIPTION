@@ -7,7 +7,7 @@ Authors@R: c(
     person("Jason", "Bryer", , "jason.bryer@cuny.edu", role = "ctb"),
     person("Angela", "Lui", , "angela.lui@cuny.edu", role = "ctb")
   )
-Description: Simplify creating multiple, related `leaflet` maps across tabs for a `shiny` application. Users build lists of any polygons, points, and polylines needed for the project, use the map_server() function to assign built lists and other chosen aesthetics into each tab, and the package leverages modules to generate all map tabs.
+Description: Simplify creating multiple, related 'leaflet' maps across tabs for a 'shiny' application. Users build lists of any polygons, points, and polylines needed for the project, use the map_server() function to assign built lists and other chosen aesthetics into each tab, and the package leverages modules to generate all map tabs.
 License: GPL (>= 3)
 URL: https://github.com/rachel-greenlee/AtlasMaker
 BugReports: https://github.com/rachel-greenlee/AtlasMaker/issues

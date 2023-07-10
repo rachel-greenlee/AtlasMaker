@@ -1,7 +1,7 @@
 #' Run a the AtlasMaker Shiny Demo
 #'
 #' @param app defaults to demo1
-#'
+#' @return Demo of AtlasMaker, a Shiny app that displays 4 tabs of Leaflet maps. See package vignette for code.
 #' @export
 #' @importFrom shiny runApp
 shiny_AtlasMaker <- function(

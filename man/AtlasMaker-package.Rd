@@ -6,7 +6,7 @@
 \alias{AtlasMaker-package}
 \title{AtlasMaker: Make Multiple 'leaflet' Maps in 'Shiny'}
 \description{
-Simplify creating multiple, related `leaflet` maps across tabs for a `shiny` application. Users build lists of any polygons, points, and polylines needed for the project, use the map_server() function to assign built lists and other chosen aesthetics into each tab, and the package leverages modules to generate all map tabs.
+Simplify creating multiple, related 'leaflet' maps across tabs for a 'shiny' application. Users build lists of any polygons, points, and polylines needed for the project, use the map_server() function to assign built lists and other chosen aesthetics into each tab, and the package leverages modules to generate all map tabs.
 }
 \seealso{
 Useful links:

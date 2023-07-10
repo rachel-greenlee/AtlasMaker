@@ -9,6 +9,9 @@ shiny_AtlasMaker(app = c("demo1"))
 \arguments{
 \item{app}{defaults to demo1}
 }
+\value{
+Demo of AtlasMaker, a Shiny app that displays 4 tabs of Leaflet maps. See package vignette for code.
+}
 \description{
 Run a the AtlasMaker Shiny Demo
 }

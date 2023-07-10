@@ -8,3 +8,4 @@ build.R
 archive/
 inst/slides
 ^cran-comments\.md$
+^CRAN-SUBMISSION$
