@@ -67,7 +67,7 @@ points_watchsites <- tibble(
 
 ## Polygon fill data-----
 
-# bring in biodiversity data 
+# bring in biodiversity data
 biodiversity <- read_csv("raw-data/Biodiversity_by_County_-_Distribution_of_Animals__Plants_and_Natural_Communities.csv")
 
 # Prep dfs by theme--------------
@@ -76,13 +76,13 @@ biodiversity <- read_csv("raw-data/Biodiversity_by_County_-_Distribution_of_Anim
 ## Flowering Plant species------------
 
 # Species Abundance Selection
-flowering_plants <- biodiversity %>%  
-  group_by(County, `Taxonomic Group`) %>% 
+flowering_plants <- biodiversity %>%
+  group_by(County, `Taxonomic Group`) %>%
   filter(`Taxonomic Group` == "Flowering Plants") %>%
   summarise(n())
 # Join and convert to Spatial Polygons
 flowering_plants <- flowering_plants %>%
-  rename("NAME" = 'County', 
+  rename("NAME" = 'County',
          "fill_value" = `n()`)
 
 
@@ -90,13 +90,13 @@ flowering_plants <- flowering_plants %>%
 
 ## Birds ------------
 # Species Abundance Selection (Birds)
-birds <- biodiversity %>%  
-  group_by(County, `Taxonomic Group`) %>% 
+birds <- biodiversity %>%
+  group_by(County, `Taxonomic Group`) %>%
   filter(`Taxonomic Group` == "Birds") %>%
   summarise(n())
 # Join and convert to Spatial Polygons
 birds <- birds %>%
-  rename("NAME" = 'County', 
+  rename("NAME" = 'County',
          "fill_value" = `n()`)
 
 
@@ -105,13 +105,13 @@ birds <- birds %>%
 
 ## Amphibians ------------
 # Species Abundance Selection
-amphibians <- biodiversity %>%  
-  group_by(County, `Taxonomic Group`) %>% 
+amphibians <- biodiversity %>%
+  group_by(County, `Taxonomic Group`) %>%
   filter(`Taxonomic Group` == "Amphibians") %>%
   summarise(n())
 # Join and convert to Spatial Polygons
 amphibians <- amphibians %>%
-  rename("NAME" = 'County', 
+  rename("NAME" = 'County',
          "fill_value" = `n()`)
 
 
@@ -119,13 +119,13 @@ amphibians <- amphibians %>%
 ## Fish species------------
 
 # Species Abundance Selection
-reptiles <- biodiversity %>%  
-  group_by(County, `Taxonomic Group`) %>% 
+reptiles <- biodiversity %>%
+  group_by(County, `Taxonomic Group`) %>%
   filter(`Taxonomic Group` == "Reptiles") %>%
   summarise(n())
 # Join and convert to Spatial Polygons
 reptiles <- reptiles %>%
-  rename("NAME" = 'County', 
+  rename("NAME" = 'County',
          "fill_value" = `n()`)
 
 
@@ -166,67 +166,67 @@ reptiles <- as_Spatial(reptiles)
 
 
 # # 4. Assigning theme #1------
-# 
+#
 # ### EXAMPLE PACKAGE CALL ---- theme_1(name = "Flowering Plants", points = c(pts1, pts3), poly_fill = df1)
-# 
+#
 # theme1_name <- "Flowering Plants"
-# 
+#
 # theme1_pts_1 <- pts1
-# 
+#
 # theme1_pts_2 <- pts3
-# 
+#
  theme1_poly_fill_1 <- as_Spatial(flowering_plants)
-# 
+#
 theme1_max_val <- as.numeric(max(flowering_plants@data$fill_value))
 theme1_min_val <- as.numeric(min(flowering_plants@data$fill_value))
 theme1_pal <- colorNumeric(c("RdYlGn"), theme1_min_val:theme1_max_val)
 
-# 
+#
 # ### EXAMPLE PACKAGE CALL ---- theme_2(name = "Birds", points = c(pts2, pts3), poly_fill = df2)
-# 
+#
 # theme2_name <- "Birds"
-# 
+#
 # theme2_pts_1 <- pts2
-# 
+#
 # theme2_pts_2 <- pts3
-# 
+#
 # theme2_poly_fill_1 <- as_Spatial(df2)
-# 
+#
 # theme2_max_val <- as.numeric(max(theme2_poly_fill_1@data$fill_value))
 # theme2_min_val <- as.numeric(min(theme2_poly_fill_1@data$fill_value))
 # theme2_pal <- colorNumeric(c("RdYlGn"), theme2_min_val:theme2_max_val)
-# 
-# 
+#
+#
 # ### EXAMPLE PACKAGE CALL ---- theme_3(name = "Birds", points = c(pts2, pts3), poly_fill = df2)
-# 
+#
 # theme3_name <- "Amphibians"
-# 
+#
 # theme3_pts_1 <- pts1
-# 
+#
 # theme3_pts_2 <- pts2
-# 
+#
 # theme3_poly_fill_1 <- as_Spatial(df3)
-# 
+#
 # theme3_max_val <- as.numeric(max(theme3_poly_fill_1@data$fill_value))
 # theme3_min_val <- as.numeric(min(theme3_poly_fill_1@data$fill_value))
 # theme3_pal <- colorNumeric(c("RdYlGn"), theme3_min_val:theme3_max_val)
-# 
-# 
+#
+#
 # ### EXAMPLE PACKAGE CALL ---- theme_3(name = "Fish", points = c(pts2, pts3), poly_fill = df2)
-# 
+#
 # theme4_name <- "Reptiles"
-# 
+#
 # theme4_pts_1 <- pts2
-# 
+#
 # theme4_pts_2 <- pts3
-# 
+#
 # theme4_poly_fill_1 <- as_Spatial(df4)
-# 
+#
 # theme4_max_val <- as.numeric(max(theme4_poly_fill_1@data$fill_value))
 # theme4_min_val <- as.numeric(min(theme4_poly_fill_1@data$fill_value))
 # theme4_pal <- colorNumeric(c("RdYlGn"), theme4_min_val:theme4_max_val)
-# 
-# 
+#
+#
 
 
 
@@ -234,7 +234,7 @@ theme1_pal <- colorNumeric(c("RdYlGn"), theme1_min_val:theme1_max_val)
 
 #variable for user picks base map, nice way to preview them all here:
 #https://leaflet-extras.github.io/leaflet-providers/preview/
-map_base_theme <- "Stamen.Terrain"
+map_base_theme <- "Stadia.StamenTerrain"
 
 
 #setting center point for map default, will want package user to set this or
@@ -271,9 +271,9 @@ datalist2 <- tibble(
   tab1 = list(
     title = "Flowering Plants",
     ShapeData = flowering_plants
-  ), 
+  ),
   tab2 = list(
-    title = "Birds", 
+    title = "Birds",
     ShapeData = birds
   )
 )
