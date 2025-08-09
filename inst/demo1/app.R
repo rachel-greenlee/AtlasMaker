@@ -196,7 +196,7 @@ server <- function(input, output) {
              polygons = polys_birds,
              polylines = lines_birds,
              points = points_birds,
-             map_base_theme = 'Stamen.Watercolor',
+             map_base_theme = 'Stadia.StamenWatercolor',
              poly_palette = 'YlGn',
              point_color = '#ffa500',
              polyline_color = "#964b00"

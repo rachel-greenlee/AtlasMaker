@@ -41,7 +41,7 @@ map_server <- function(id,
                        polylines = NULL,
                        center = NULL,
                        min_zoom = 7,
-                       map_base_theme = 'Stamen.Terrain',
+                       map_base_theme = 'Stadia.StamenTerrain',
                        poly_palette = 'BuPu',
                        point_color = 'black',
                        polyline_color = 'gray') {

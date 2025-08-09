@@ -18,6 +18,7 @@ Imports:
     shiny
 Suggests: 
     knitr,
+    sp,
     rmarkdown
 VignetteBuilder: 
     knitr
